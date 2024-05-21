@@ -12,6 +12,7 @@ from studio.view.MenuFrame import MenuBar
 
 
 class CamCapture:
+    
     def __init__(self, lien=None, screen_video=None, tab=None, **kwargs):
         super().__init__(**kwargs)
         self.tab = tab
@@ -29,7 +30,6 @@ class CamCapture:
         # Liste pour stocker les images à enregistrer
         self.frames_to_record = []
 
-    #        self.window.mainloop()
 
     def captureCamera(self):
         self.capture = 1
@@ -39,14 +39,11 @@ class CamCapture:
         # self.window.after(delay, func)
 
     def stop(self):
-        # progress = ttk.Progressbar(self.window, length=400, maximum=300)
-        # progress.pack(pady=30)
-        # progress.start(10)
+
         self.recording = not self.recording
         self.frames_to_record = asynckivy.start(self.cameraVideo.enregistrer(self.frames_to_record))
         self.record_demarage = False
 
-        # progress.stop()
 
     def enregistrer(self):
         self.recording = True
@@ -73,7 +70,6 @@ class CamCapture:
     def update(self, dt=None):
 
         if self.videoCamera:
-            # print(f"update====>>>> {self.videoCamera}")
             # Lire une image depuis le flux vidéo
             ret, frame = self.videoCamera.read()
             # Appeler récursivement la fonction update après un certain délai
@@ -100,9 +96,6 @@ class CamCapture:
                         self.cameraVideo.record_demarage(self.frames_to_record)
                         self.record_update()
 
-            # Appeler récursivement la fonction update après un certain délai
-            # await self.afert(16, self.update())
-            # self.window.after(16, func)
             time = 1 / 30
             self.afert(time, self.update)
 
@@ -110,7 +103,6 @@ class CamCapture:
         if self.recording and self.frames_to_record:
             self.frames_to_record = self.cameraVideo.update_enregistrer(self.frames_to_record)
             self.afert(10, self.record_update)
-            # self.window.after(15000, self.record_update)
 
         # self.record_update()
 
@@ -120,7 +112,12 @@ class CamCapture:
         self.record_demarage = False
 
     def save_frame_camera_key(self, dir_path, basename, n, frame, ext='jpg'):
-        # os.makedirs(dir_path, exist_ok=True)
         base_path = os.path.join(dir_path, basename)
 
         cv2.imwrite('{}_{}.{}'.format(base_path, n, ext), frame)
+
+    def on_break(self):
+        pass
+
+    def on_play(self):
+        pass

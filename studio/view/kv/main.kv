@@ -63,7 +63,6 @@
                         icon_size: dp(15)
                         style: "tonal"
                         theme_bg_color: "Custom"
-                        # md_bg_color: "#4287f5"
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
                     
@@ -73,7 +72,6 @@
                         icon_size: dp(15)
                         style: "tonal"
                         theme_bg_color: "Custom"
-                        # md_bg_color: "#4287f5"
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
                         on_release: app.listDropdown()    
@@ -92,13 +90,15 @@
                         icon: 'content-save'
                         style: "tonal"
                         theme_bg_color: "Custom"
-                        # md_bg_color: "#4287f5"
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
                         icon_size: dp(15)
+                        on_release:
+                            app.camController.on_record()
 
             CardImage:
                 id: cardImage
+                # camController: app.camController
                 pos_hint: {"center_x": .5, "center_y": .5}
                 size_hint: .9, .5
 
@@ -150,9 +150,10 @@
                 pos_hint:{"center_y": .5}
                 style: "tonal"
                 theme_bg_color: "Custom"
-                # md_bg_color: "#4287f5"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    # if self.icon == 'play' root.camController.on_play() else root.camController.on_break()
 
             IconButtonAction:
                 icon: "stop"
@@ -163,6 +164,9 @@
                 theme_bg_color: "Custom"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    root.camController.on_stop()
+
             
             IconButtonAction:
                 icon: "video-outline"
@@ -174,6 +178,8 @@
                 theme_bg_color: "Custom"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    root.camController.save()
 
             MDLabel:
                 text: "00:00:00"
@@ -247,18 +253,20 @@
                 icon_size: dp(15)
                 style: "tonal"
                 theme_bg_color: "Custom"
-                # md_bg_color: "#4287f5"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    root.camController.on_switch()
 
             IconButtonAction:
                 icon: 'video-outline'
                 icon_size: dp(15)
                 style: "tonal"
                 theme_bg_color: "Custom"
-                # md_bg_color: "#4287f5"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    root.camController.on_save()
 
             IconButtonAction:
                 id: shape
@@ -266,7 +274,6 @@
                 icon_size: dp(15)
                 style: "tonal"
                 theme_bg_color: "Custom"
-                # md_bg_color: "#4287f5"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
                 on_release: root.affiche_format()
@@ -286,12 +293,12 @@
                 icon_size: dp(15)
                 style: "tonal"
                 theme_bg_color: "Custom"
-                # md_bg_color: "#4287f5"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
 
     CardImage:
         id: cardImage
+        # camController: root.camController
         pos_hint: {"center_x": .5, "center_y": .45}
         size_hint: .7, .5
         

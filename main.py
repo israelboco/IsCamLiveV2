@@ -8,6 +8,7 @@ from kivymd.uix.button import MDIconButton
 from kivy.uix.dropdown import DropDown
 from kivymd.utils import asynckivy
 
+from studio.controller import CamController
 from studio.controller.ExpansionPanel import ExpansionPanelVid, FocusButton, IconButtonAction
 from kivymd.uix.expansionpanel import MDExpansionPanel
 from studio.enum.FormatEnum import FormatEnum
@@ -33,6 +34,7 @@ class AppCameraLive(MDApp):
         self.load_all_kv_files(self.directory)
         self.dropdown = DropDown()
         self.screenMain = ScreenMain()
+        self.camController = CamController()
 
     def build(self) -> MDScreen:
         self.title = "Camera Live"
@@ -114,6 +116,7 @@ class AppCameraLive(MDApp):
             start_video = CamCapture(text, self.screenMain)
             lancer = await start_video.lancer(cam)
         self.screenMain.ids.spinner.active = False
+        self.camController.add_start_video(start_video)
     
     def on_start_audio(self):
         pass
