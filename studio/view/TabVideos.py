@@ -64,5 +64,5 @@ class TabVideo(MDFloatLayout, MDTabsBase):
     
     def selectDropdown(self, text):
         self.dropdown.select(text)
-        self.ids.label_format.text = "format :" + str(text)
+        self.ids.label_format.text = "[color=#4287f5]format :" + str(text) + "[/color]"
     

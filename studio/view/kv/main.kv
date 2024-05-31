@@ -78,13 +78,14 @@
 
                     MDLabel:
                         id: label_format
-                        text: "format"
+                        text: "[color=#4287f5]format[/color]"
                         adaptive_height: True
                         font_size: dp(15)
                         size_hint_x: None
                         width: dp(80)
                         halign: 'center'
                         pos_hint: {'center_y': .33}
+                        markup: True
 
                     IconButtonAction:
                         icon: 'content-save'
@@ -131,6 +132,18 @@
         md_bg_color: "#676767"
         orientation: "vertical"
 
+        MDRelativeLayout:
+            size_hint_y: None
+            height: dp(10)
+
+            MDCard:
+                md_bg_color: "#fff000"
+                size_hint: None, None
+                width: dp(10)
+                height: dp(10)
+                radius: 24
+                pos_hint:{"center_x": .94, "center_y": .5}
+
         Image:
             id: image
             size_hint: None, None
@@ -142,6 +155,19 @@
             orientation: "horizontal"
             md_bg_color: "#676767"
             radius: 24
+
+            IconButtonAction:
+                icon: "microphone-outline"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                on_release:
+                    # if self.icon == 'play' root.camController.on_play() else root.camController.on_break()
+
 
             IconButtonAction:
                 icon: "play"
@@ -168,28 +194,30 @@
                     root.camController.on_stop()
 
             
-            IconButtonAction:
-                icon: "video-outline"
-                adaptive_height: True
-                size_hint_x: .1
-                icon_size: dp(15)
-                pos_hint:{"center_x": 0.7, "center_y": .5}
-                style: "tonal"
-                theme_bg_color: "Custom"
-                theme_icon_color: "Custom"
-                icon_color: "#4287f5"
-                on_release:
-                    root.camController.on_record()
+            # IconButtonAction:
+            #     icon: "video-outline"
+            #     adaptive_height: True
+            #     size_hint_x: .1
+            #     icon_size: dp(15)
+            #     pos_hint:{"center_x": 0.7, "center_y": .5}
+            #     style: "tonal"
+            #     theme_bg_color: "Custom"
+            #     theme_icon_color: "Custom"
+            #     icon_color: "#4287f5"
+            #     on_release:
+            #         root.camController.on_record()
 
             MDLabel:
-                text: "00:00:00"
+                text: "[color=#ffffff]00:00:00[/color]"
                 size_hint_x: .2
                 pos_hint:{"center_y": .5}
                 font_size: dp(12)
+                markup: True
 
 
 <TabVideo>
     app: app 
+
     MDBoxLayout:
         md_bg_color: "#676767"
         orientation: "vertical"
@@ -258,15 +286,15 @@
                 on_release:
                     root.camController.on_switch()
 
-            IconButtonAction:
-                icon: 'video-outline'
-                icon_size: dp(15)
-                style: "tonal"
-                theme_bg_color: "Custom"
-                theme_icon_color: "Custom"
-                icon_color: "#4287f5"
-                on_release:
-                    root.camController.on_record()
+            # IconButtonAction:
+            #     icon: 'video-outline'
+            #     icon_size: dp(15)
+            #     style: "tonal"
+            #     theme_bg_color: "Custom"
+            #     theme_icon_color: "Custom"
+            #     icon_color: "#4287f5"
+            #     on_release:
+            #         root.camController.on_record()
 
             IconButtonAction:
                 id: shape
@@ -280,21 +308,24 @@
             
             MDLabel:
                 id: label_format
-                text: "format"
+                text: "[color=#4287f5]format[/color]"
                 adaptive_height: True
                 font_size: dp(15)
                 size_hint_x: None
                 width: dp(80)
                 halign: 'center'
                 pos_hint: {'center_y': .33}
+                markup: True
 
             IconButtonAction:
-                icon: 'folder'
+                icon: 'content-save'
                 icon_size: dp(15)
                 style: "tonal"
                 theme_bg_color: "Custom"
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
+                on_release:
+                    root.camController.on_record()
 
     CardImage:
         id: cardImage

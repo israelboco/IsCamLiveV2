@@ -1,0 +1,59 @@
+<ScreenWelcome>:
+    md_bg_color: "#262626"
+
+    Image:
+        source: "studio\\asset\holo.png"
+        pos_hint: {"center_x": 0.05, "center_y": 0.94}
+        size_hint: 0.2, 0.2
+
+    Image:
+        source: "studio\\asset\holo.png"
+        pos_hint: {"center_x": 0.5, "center_y": 0.65}
+        size_hint: .7, .8
+
+    MDLabel:
+        text: "[b][i]W e l c o m e   t o   C a m L i v e  ! [/i][/b]"
+        font_size: "26sp"
+        pos_hint: {"center_y": .42}
+        halign: "center"
+        color: "#5AA6FF"
+        markup: True
+
+    MDLabel:
+        text: "[b][i]Best application for optimizing real-time multi-source capture and broadcast for events: a cost-effective solution with Cam Live.[/b][/i]"
+        font_size: "13sp"
+        size_hint_x: .85
+        pos_hint: {"center_x": .5, "center_y": .3}
+        halign: "center"
+        color: "#5AA6FF"
+        markup: True
+
+    MDRectangleFlatButton:
+        text: "Get Start"
+        size_hint: .66, .065
+        pos_hint: {"center_x": .5, "center_y": .18}
+        background_color: 0, 0, 0, 0
+        on_release:
+            root.main_view.transition.direction = "left"
+            root.main_view.current = "screen main"
+        canvas.before:
+            Color:
+                rgb: rgba(52, 0, 231, 255)
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [5]
+
+
+<MainScreenView>
+    id: main_view
+    screen_main: screen_main
+    md_bg_color: app.theme_cls.primary_light
+
+    ScreenWelcome:
+        main_view: main_view
+    
+    ScreenMain:
+        id: screen_main
+        name: 'screen main'
+        main_view: main_view

@@ -1,7 +1,7 @@
 from studio.view.CamCapture import CamCapture
 
 
-class CamController:
+class CamController(CamCapture):
     camView = None
     # pass
     

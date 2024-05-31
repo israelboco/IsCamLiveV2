@@ -17,7 +17,7 @@ from studio.view.CameraFrame import Camera
 from studio.view.CardAudio import CardAudio
 from studio.view.MenuFrame import MenuBar
 from studio.view.MyProcess import MyProcess
-from studio.view.ScreenMain import ScreenMain
+from studio.view.ScreenMain import MainScreenView, ScreenMain
 from studio.view.TabVideos import TabVideo
 from kivymd.icon_definitions import md_icons
 
@@ -34,21 +34,22 @@ class AppCameraLive(MDApp):
         super().__init__(**kwargs)
         self.load_all_kv_files(self.directory)
         self.dropdown = DropDown()
-        self.screenMain = ScreenMain()
+        self.main_view = MainScreenView()
+        self.screenMain = self.main_view.screen_main
 
     def build(self) -> MDScreen:
         self.title = "Camera Live"
-        return self.screenMain
+        return self.main_view
 
     def on_start(self):
         tab = TabVideo(id='1', title="CamLive 1")
-        self.root.ids.tab_videos.add_widget(tab)
+        self.screenMain.ids.tab_videos.add_widget(tab)
         self.affiche_format()
         expansion = ExpansionPanelVid()
         expansion.start_expand_one()
         expansion.start_expand_two()
         self.screenMain.ids.one_widget.add_widget(expansion.expand_one)
-        self.screenMain.ids.two_widget.add_widget(expansion.expand_two)
+        # self.screenMain.ids.two_widget.add_widget(expansion.expand_two)
 
     def on_stop(self):
         pass
@@ -61,7 +62,7 @@ class AppCameraLive(MDApp):
                 id=str(self.index),
                 tab_label_text=f"[ref={name_tab}][font={fonts[-1]['fn_regular']}]{md_icons['close']}[/font][/ref]{name_tab}",
             )
-            self.root.ids.tab_videos.add_widget(
+            self.screenMain.ids.tab_videos.add_widget(
                 tab
             )
         except Exception as e:
@@ -70,8 +71,8 @@ class AppCameraLive(MDApp):
     def remove_tab(self):
         if self.index > 1:
             self.index -= 1
-        self.root.ids.tab_videos.remove_widget(
-            self.root.ids.tab_videos.get_tab_list()[-1]
+        self.screenMain.ids.tab_videos.remove_widget(
+            self.screenMain.ids.tab_videos.get_tab_list()[-1]
         )
 
     def on_ref_press(
@@ -134,7 +135,7 @@ class AppCameraLive(MDApp):
     
     def selectDropdown(self, text):
         self.dropdown.select(text)
-        self.screenMain.ids.label_format.text = "format :" + str(text)
+        self.screenMain.ids.label_format.text = "[color=#4287f5]format :" + str(text) + "[/color]"
 
     # def tap_expansion_chevron(
     #     self, panel: MDExpansionPanel, chevron: MDIconButton

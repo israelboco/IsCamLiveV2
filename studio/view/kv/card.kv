@@ -7,36 +7,40 @@
 
         MDList:
             id: box_one
-            # clos: 1
-            # adaptive_height: True
+            spacing: dp(10)
 
-            TwoLineIconListItem:
-                text: "(050)-123-45-67"
-                secondary_text: "Mobile"
-                IconLeftWidget:
-                    icon: 'facebook'
-                    icon_color: "#ffffff"
+            CardConnect:
+                id: Camlive
+                text: "Connect to plateforme Camlive"
+                secondary_text: "Cam live Web"
+                icon: 'web'
+                on_release:
+                    print('on_release')
             
-            TwoLineIconListItem:
-                text: "(050)-123-45-67"
-                secondary_text: "Mobile"
-                IconLeftWidget:
-                    icon: 'youtube'
+            CardConnect:
+                id: facebook
+                text: "Connect to plateforme Facebook Live"
+                secondary_text: "facebook"
+                icon: "facebook"
+                on_release:
+                    print('on_release')
             
-            TwoLineAvatarIconListItem:
-                text: "(050)-123-45-67"
-                secondary_text: "Mobile"
-                IconLeftWidget:
-                    icon: 'instagram'
-                IconRightWidget:
-                    icon: 'instagram'
+            CardConnect:
+                id: youtube
+                text: "Connect to plateforme Youtube Live"
+                secondary_text: "youtube"
+                icon: 'youtube'
+                on_release:
+                    print('on_release')
             
-            TwoLineIconListItem:
-                text: "(050)-123-45-67"
-                secondary_text: "Mobile"
+            # TwoLineIconListItem:
+            #     text: "(050)-123-45-67"
+            #     secondary_text: "Mobile"
 
-                IconLeftWidget:
-                    icon: 'twitter'
+            #     IconLeftWidget:
+            #         icon: 'instagram'
+            #     IconRightWidget:
+            #         icon: 'instagram'
 
 
 <ContentExpandTwo>:
@@ -47,22 +51,10 @@
         MDList:
             id: box
             spacing: dp(10)
-            # cols: 2
 
             CardAudio:
 
             CardAudio:
-
-            CardAudio:
-
-            CardAudio:
-
-            CardAudio:
-
-            # CardAudio:
-
-            # CardAudio:
-
 
 
 <CardAudio>
@@ -87,7 +79,7 @@
                 icon_color: "#4287f5"
                 adaptive_width: True
             
-            MDIconButton:
+            IconButtonAction:
                 icon: "microphone-outline"
                 adaptive_height: True
                 icon_size: dp(20)
@@ -103,3 +95,48 @@
                 pos_hint:{"center_x": .65, "center_y": .29}
                 adaptive_width: True
                 font_size: dp(12)
+
+
+<CardConnect>:
+    md_bg_color: "#676767"
+    orientation: 'horizontal'
+    text: twoline.text
+    secondary_text: twoline.secondary_text
+    icon: iconLef.icon
+    size_hint_y: None
+    height: dp(70)
+
+    TwoLineIconListItem:
+        id: twoline
+        text: root.text
+        secondary_text: root.secondary_text
+        IconLeftWidget:
+            id: iconLef
+            icon: root.icon
+            icon_color: "#ffffff"
+
+    IconButtonAction:
+        icon: "movie-settings-outline"
+        adaptive_height: True
+        icon_size: dp(20)
+        pos_hint:{"center_y": .5}
+        style: "tonal"
+        theme_bg_color: "Custom"
+        theme_icon_color: "Custom"
+        icon_color: "#4287f5"
+        adaptive_width: True
+        on_release:
+            print(root.id)
+    
+    MDRelativeLayout:
+        size_hint_x: None
+        width: dp(20)
+
+        MDCard:
+            md_bg_color: "#fff000"
+            size_hint: None, None
+            width: dp(10)
+            height: dp(10)
+            radius: 24
+            pos_hint:{"center_x": .1, "center_y": .85}
+
