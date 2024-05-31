@@ -1,9 +1,12 @@
-# from studio.view.CamCapture import CamCapture
+from studio.view.CamCapture import CamCapture
 
 
 class CamController:
+    camView = None
+    # pass
     
-    def __init__(self, camView=None) -> None:
+    def __init__(self, camView=None, **kwargs):
+        super().__init__(**kwargs)
         self.camView = camView
 
     def add_start_video(self, camView):

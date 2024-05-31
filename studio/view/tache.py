@@ -28,10 +28,10 @@
 
 # import os
 
-# # Obtenez le chemin vers le répertoire DCIM
+# Obtenez le chemin vers le répertoire DCIM
 # dcim_path = os.path.join(os.path.expanduser("~"), "DCIM")
 
-# # Utilisez dcim_path pour enregistrer votre image
+# Utilisez dcim_path pour enregistrer votre image
 
 
 # #comment publier une instance d'opencv video sur le reseau avec un lien depuis un programme python

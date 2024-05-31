@@ -4,7 +4,7 @@ from kivymd.uix.tab import MDTabsBase
 from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivymd.utils import asynckivy
-from studio.controller import CamController
+from studio.controller.CamController import CamController
 from studio.controller.ExpansionPanel import FocusButton
 from studio.enum.FormatEnum import FormatEnum
 from studio.view.CamCapture import CamCapture
@@ -13,11 +13,11 @@ from studio.view.CamCapture import CamCapture
 class TabVideo(MDFloatLayout, MDTabsBase):
     '''Class implementing content for a tab.''' 
     dropdown = None
+    camController = CamController()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.camController = CamController()
-        
+        pass        
     
     def on_start_video(self):
         text = self.ids.source.text

@@ -1,16 +1,16 @@
 import kivymd
 from kivy.lang import Builder
-from kivymd.app import MDApp
+from kivymd.app import MDApp # type: ignore
 from kivymd.font_definitions import fonts
 from kivymd.uix.screen import MDScreen
 from kivy.uix.button import Button
 from kivymd.uix.button import MDIconButton
 from kivy.uix.dropdown import DropDown
-from kivymd.utils import asynckivy
+from kivymd.utils import asynckivy # type: ignore
 
-from studio.controller import CamController
+from studio.controller.CamController import CamController
 from studio.controller.ExpansionPanel import ExpansionPanelVid, FocusButton, IconButtonAction
-from kivymd.uix.expansionpanel import MDExpansionPanel
+from kivymd.uix.expansionpanel import MDExpansionPanel # type: ignore
 from studio.enum.FormatEnum import FormatEnum
 from studio.view.CamCapture import CamCapture
 from studio.view.CameraFrame import Camera
@@ -28,13 +28,13 @@ class AppCameraLive(MDApp):
     index = 1
     listProces = []
     listCam = []
-
+    camController = CamController()
+ 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_all_kv_files(self.directory)
         self.dropdown = DropDown()
         self.screenMain = ScreenMain()
-        self.camController = CamController()
 
     def build(self) -> MDScreen:
         self.title = "Camera Live"
@@ -105,17 +105,18 @@ class AppCameraLive(MDApp):
                 cam = content[1]
                 break
         if not cam:
-            await asynckivy.sleep(0.2)
+            await asynckivy.sleep(0.5)
             start_video = CamCapture(text, self.screenMain)
             lancer = await start_video.lancer()
             if lancer:
                 print(f"start_source====>>>> {lancer}")
                 self.listCam.append((text, lancer))
         else:
-            await asynckivy.sleep(0.2)
+            await asynckivy.sleep(0.5)
             start_video = CamCapture(text, self.screenMain)
             lancer = await start_video.lancer(cam)
         self.screenMain.ids.spinner.active = False
+        print(f"add_start_video ====>>>> {self.camController}")
         self.camController.add_start_video(start_video)
     
     def on_start_audio(self):

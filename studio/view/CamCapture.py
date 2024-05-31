@@ -80,7 +80,7 @@ class CamCapture:
                 image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
                 # display image from the texture
                 self.screen_video.ids.cardImage.image.texture = image_texture
-                if self.capture > 0:
+                if self.capture == 1 or self.capture == 2:
                     name = str(self.capture) + "_" + datetime.now().strftime("%A_%d_%B_%Y_%I_%M_%S")
                     self.save_frame_camera_key("enregistrement/capture", 'capture', name, frame)
                     self.capture += 1
