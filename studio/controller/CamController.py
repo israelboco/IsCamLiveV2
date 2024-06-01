@@ -1,4 +1,5 @@
 from studio.view.CamCapture import CamCapture
+from kivymd.toast import toast
 
 
 class CamController(CamCapture):
@@ -13,21 +14,28 @@ class CamController(CamCapture):
         self.camView = camView
     
     def on_break(self):
-        print('on_break')
+        if not self.camView:
+            return toast('entrer url de la source')
 
     def on_play(self):
-        print('on_play')
+        if not self.camView:
+            return toast('entrer url de la source')
 
     def on_stop(self):
-        print('on_stop')
+        if not self.camView:
+            return toast('aucun camera en cours de lecture')
 
     def on_record(self):
-        print('on_record')
+        if not self.camView:
+            return toast('aucun camera en cours de lecture')
 
     def select_format(self):
-        print('select_format')
+        if not self.camView:
+            return toast('aucun camera en cours de lecture')
 
     def on_switch(self):
-        print('on_switch')
+        if not self.camView:
+            return toast('La cam principe ne peux pas basculer sur ce camera')
+
 
     

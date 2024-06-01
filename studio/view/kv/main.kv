@@ -59,12 +59,23 @@
                     md_bg_color: "#676767"
                 
                     IconButtonAction:
-                        icon: "menu"
+                        icon: "microphone-outline"
                         icon_size: dp(15)
                         style: "tonal"
                         theme_bg_color: "Custom"
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
+                    
+                    MDLabel:
+                        id: liste_microphone
+                        text: "[color=#4287f5]Audio[/color]"
+                        adaptive_height: True
+                        font_size: dp(15)
+                        size_hint_x: None
+                        width: dp(80)
+                        halign: 'center'
+                        pos_hint: {'center_y': .33}
+                        markup: True
                     
                     IconButtonAction:
                         id: shape
@@ -157,7 +168,7 @@
             radius: 24
 
             IconButtonAction:
-                icon: "microphone-outline"
+                icon: "microphone-off"
                 size_hint_x: .1
                 icon_size: dp(15)
                 pos_hint:{"center_y": .5}
