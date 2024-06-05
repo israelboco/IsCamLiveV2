@@ -1,0 +1,20 @@
+<SelectReseauBox>
+    label_propos: label_propos
+    size_hint_y: None
+    height: dp(150)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 2
+
+            FitImage:
+                source: "studio\\asset\holo.png"
+                pos_hint: {"center_x": 0.5, "center_y": 0.85}
+                size_hint: .5, .7
+            
+            MDLabel:
+                id: label_propos
+                text: ''
+                markup: True
+                halign: 'center'

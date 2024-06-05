@@ -33,6 +33,17 @@
                         size: dp(20), dp(20)
                         pos_hint: {'center_x': .5, 'center_y': .5}
                         active: False
+                    
+                    IconButtonAction:
+                        id: list_camera
+                        icon: "camera-outline"
+                        icon_size: dp(20)
+                        style: "tonal"
+                        theme_bg_color: "Custom"
+                        theme_icon_color: "Custom"
+                        icon_color: "#4287f5"
+                        pos_hint: {"center_y": .5}
+                        on_release: app.listcamera()
 
                     MDTextField:
                         id: lien
@@ -132,12 +143,14 @@
                     id: tab_videos
                     on_ref_press: app.on_ref_press(*args)
 
+
 <CardImage>:
     md_bg_color: "#676767" #ffffff
     padding: "10dp"
     spacing: "5dp"
     radius: 24
     image: image
+    lecture: lecture
 
     MDBoxLayout:
         md_bg_color: "#676767"
@@ -148,6 +161,7 @@
             height: dp(10)
 
             MDCard:
+                id: bage_image
                 md_bg_color: "#fff000"
                 size_hint: None, None
                 width: dp(10)
@@ -157,6 +171,7 @@
 
         Image:
             id: image
+            source: "studio\\asset\\texture_image.jpg"
             size_hint: None, None
             width: root.width - dp(50)
             height: root.height - dp(75)
@@ -168,6 +183,7 @@
             radius: 24
 
             IconButtonAction:
+                id: microphone
                 icon: "microphone-off"
                 size_hint_x: .1
                 icon_size: dp(15)
@@ -181,6 +197,7 @@
 
 
             IconButtonAction:
+                id: play
                 icon: "play"
                 size_hint_x: .1
                 icon_size: dp(15)
@@ -190,9 +207,10 @@
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
                 on_release:
-                    # if self.icon == 'play' root.camController.on_play() else root.camController.on_break()
+                    asynckivy.start(root.camController.on_play()) if self.icon == 'play' else root.camController.on_break()
 
             IconButtonAction:
+                id: stop
                 icon: "stop"
                 size_hint_x: .1
                 icon_size: dp(15)
@@ -219,6 +237,7 @@
             #         root.camController.on_record()
 
             MDLabel:
+                id: lecture
                 text: "[color=#ffffff]00:00:00[/color]"
                 size_hint_x: .2
                 pos_hint:{"center_y": .5}
@@ -286,6 +305,7 @@
             orientation: "horizontal"
             adaptive_height: True
             spacing: "5dp"
+            md_bg_color: '#676767'
 
             IconButtonAction:
                 icon: "video-switch-outline"
@@ -343,4 +363,4 @@
         camController: root.camController
         pos_hint: {"center_x": .5, "center_y": .45}
         size_hint: .7, .5
-        
+         

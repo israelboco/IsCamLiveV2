@@ -4,10 +4,14 @@ from kivymd.app import MDApp # type: ignore
 from kivymd.font_definitions import fonts
 from kivymd.uix.screen import MDScreen
 from kivy.uix.button import Button
+from kivymd.uix.button import MDFlatButton
 from kivymd.uix.button import MDIconButton
 from kivy.uix.dropdown import DropDown
+from kivymd.uix.menu import MDDropdownMenu
 from kivymd.utils import asynckivy # type: ignore
 
+from studio.constants.GetNetworks import GetNetworks
+from studio.controller import ConnectLiveController
 from studio.controller.CamController import CamController
 from studio.controller.ExpansionPanel import ExpansionPanelVid, FocusButton, IconButtonAction
 from kivymd.uix.expansionpanel import MDExpansionPanel # type: ignore
@@ -15,8 +19,7 @@ from studio.enum.FormatEnum import FormatEnum
 from studio.view.CamCapture import CamCapture
 from studio.view.CameraFrame import Camera
 from studio.view.CardAudio import CardAudio
-from studio.view.MenuFrame import MenuBar
-from studio.view.MyProcess import MyProcess
+from studio.view.MyProcess import  MyProcess
 from studio.view.ScreenMain import MainScreenView, ScreenMain
 from studio.view.TabVideos import TabVideo
 from kivymd.icon_definitions import md_icons
@@ -29,12 +32,17 @@ class AppCameraLive(MDApp):
     listProces = []
     listCam = []
     camController = CamController()
+    connectLiveController = None
+    menu_items_format = []
+    menu_items_camera = []
+    # items = [f"{index}" for index in list(FormatEnum)]
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_all_kv_files(self.directory)
-        self.dropdown = DropDown()
+        self.dropdown = MDDropdownMenu()
         self.main_view = MainScreenView()
+        self.getnetworks = GetNetworks()
         self.screenMain = self.main_view.screen_main
 
     def build(self) -> MDScreen:
@@ -45,11 +53,13 @@ class AppCameraLive(MDApp):
         tab = TabVideo(id='1', title="CamLive 1")
         self.screenMain.ids.tab_videos.add_widget(tab)
         self.affiche_format()
+        self.affiche_camera()
         expansion = ExpansionPanelVid()
         expansion.start_expand_one()
         expansion.start_expand_two()
         self.screenMain.ids.one_widget.add_widget(expansion.expand_one)
         # self.screenMain.ids.two_widget.add_widget(expansion.expand_two)
+
 
     def on_stop(self):
         pass
@@ -99,43 +109,66 @@ class AppCameraLive(MDApp):
     
     async def start_source(self, text):
         cam = None
+        await asynckivy.sleep(1)
         for content in self.listCam:
             print(content)
             listText= content[0]
             if text == listText:
                 cam = content[1]
                 break
-        if not cam:
-            await asynckivy.sleep(0.5)
-            start_video = CamCapture(text, self.screenMain)
-            lancer = await start_video.lancer()
-            if lancer:
-                print(f"start_source====>>>> {lancer}")
-                self.listCam.append((text, lancer))
-        else:
-            await asynckivy.sleep(0.5)
-            start_video = CamCapture(text, self.screenMain)
-            lancer = await start_video.lancer(cam)
         self.screenMain.ids.spinner.active = False
-        print(f"add_start_video ====>>>> {self.camController}")
-        self.camController.add_start_video(start_video)
-    
-    def on_start_audio(self):
-        pass
+        lancer = await self.camController.add_start_video(text, self.screenMain, cam)
+        self.connectLiveController = ConnectLiveController(self.camController)
+        if lancer:
+            print(f"start_source====>>>> {lancer}")
+            if not cam:
+                self.listCam.append((text, lancer))
 
     def affiche_format(self):
-        for index in list(FormatEnum):
+       
+        self.menu_items_camera = [
+            {
+                "viewclass": "OneLineListItem",
+                "text": str(index.value),
+                "on_release": lambda x=str(index.value): self.selectDropdown(x),
+            } for index in list(FormatEnum)
+        ]
 
-            btn = FocusButton(text=str(index.value), size_hint_y=None, height=44)
-            btn.bind(on_release=lambda btn: self.selectDropdown(btn.text))
-            self.dropdown.add_widget(btn)
-    
+        self.dropdown1 = MDDropdownMenu(items=self.menu_items_format, width_mult=4, caller=self.screenMain.ids.shape)
+
     def listDropdown(self):
-        self.dropdown.open(self.screenMain.ids.label_format)
+        self.dropdown1.open()
+
+    def affiche_camera(self):
+
+        self.menu_items_camera = [
+            {
+                "viewclass": "OneLineListItem",
+                "text": str(index['interface']),
+                "on_release": lambda x=str(index['interface']): self.selectDropdownNetwork(x),
+            } for index in self.getnetworks.get_networks()
+        ]
+
+        self.dropdown2 = MDDropdownMenu(items=self.menu_items_format, width_mult=3, caller=self.screenMain.ids.list_camera)
+
     
+    def listcamera(self):
+        self.dropdown2.open()
+
+    # @staticmethod
     def selectDropdown(self, text):
-        self.dropdown.select(text)
+        print(text)
         self.screenMain.ids.label_format.text = "[color=#4287f5]format :" + str(text) + "[/color]"
+        self.camController.select_format(text)
+        if self.dropdown1:
+            self.dropdown1.dismiss()
+    
+    def selectDropdownNetwork(self, text):
+        print(text)
+        self.screenMain.ids.label_format.text = "[color=#4287f5]format :" + str(text) + "[/color]"
+        self.camController.select_format(text)
+        if self.dropdown2:
+            self.dropdown2.dismiss()
 
     # def tap_expansion_chevron(
     #     self, panel: MDExpansionPanel, chevron: MDIconButton

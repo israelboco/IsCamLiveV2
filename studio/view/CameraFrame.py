@@ -22,6 +22,7 @@ class Camera():
         self.filename_audio = None
         self.filename_video_2 = None
         self.filename_video_final = None
+        self.audioCamera = None
 
     async def afficheCamara(self, lien=None, cam=None):
         print(lien)
@@ -56,14 +57,12 @@ class Camera():
         except Exception as e:  # noqa: E722
             print(e)
             audio_thread = AudioRecorder(self.filename_audio)
+        self.audioCamera = audio_thread
         try:
             if not cam:
                 await video_thread.demarage(lien, filename)
             else:
                 await video_thread.demarage(lien, filename, cam)
-            # process = MyProcess(target_function=video_thread.demarage, args=(lien, filename))
-            # self.listProces.append(process)
-            # process.run()
             self.video_Camera = video_thread.video_cap
             print(f"start_Av=======>  {self.video_Camera}")
         except Exception as e:
@@ -92,11 +91,12 @@ class Camera():
             print("video_thread update")
             return video_thread.update_record(frames_to_record)
 
-    async def stop(self):
+    async def stop(self, mix=False):
         await asynckivy.sleep(0)
         video_thread.stop()
         audio_thread.stop()
-        # self.stop_enregistrement()
+        if mix:
+            asynckivy.start(self.stop_enregistrement())
 
     async def stop_enregistrement(self):
         await asynckivy.sleep(0)

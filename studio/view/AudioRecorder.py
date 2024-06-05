@@ -8,7 +8,7 @@ class AudioRecorder:
     # Audio class based on pyAudio and Wave
     def __init__(self, filename=None, lien=None):
 
-        self.open = True
+        self.open = False
         self.rate = 44100
         self.frames_per_buffer = 1024
         self.channels = 2
@@ -28,6 +28,9 @@ class AudioRecorder:
                                       input=True,
                                       frames_per_buffer=self.frames_per_buffer,
                                       input_device_index = device_index)
+        if self.stream:
+            self.open = True
+
         self.audio_frames = []
 
     # Audio starts being recorded

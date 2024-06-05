@@ -5,6 +5,26 @@
         source: "studio\\asset\holo.png"
         pos_hint: {"center_x": 0.05, "center_y": 0.94}
         size_hint: 0.2, 0.2
+    
+    MDTextButton:
+        text: "A propos"
+        font_size: 15
+        color: "#4287f5"
+        pos_hint: {"center_x": 0.9, "center_y": 0.94}
+        # pos_hint: {"center_x": 0.85, "center_y": 0.94}
+        on_release:
+            root.apropos()
+    
+    # IconButtonAction:
+    #     icon: "cog-outline"
+    #     icon_size: dp(25)
+    #     style: "tonal"
+    #     theme_bg_color: "Custom"
+    #     theme_icon_color: "Custom"
+    #     icon_color: "#4287f5"
+    #     unfocus_color: "#262626"
+    #     pos_hint: {"center_x": 0.95, "center_y": 0.94}
+    #     on_release:
 
     Image:
         source: "studio\\asset\holo.png"
@@ -12,7 +32,7 @@
         size_hint: .7, .8
 
     MDLabel:
-        text: "[b][i]W e l c o m e   t o   C a m L i v e  ! [/i][/b]"
+        text: "[b][i] B i e n v e n u e  s u r   C a m L i v e  ! [/i][/b]"
         font_size: "26sp"
         pos_hint: {"center_y": .42}
         halign: "center"
@@ -20,7 +40,7 @@
         markup: True
 
     MDLabel:
-        text: "[b][i]Best application for optimizing real-time multi-source capture and broadcast for events: a cost-effective solution with Cam Live.[/b][/i]"
+        text: "[b][i]Meilleure application pour optimiser la capture et la diffusion multi-sources en temps réel lors d'événements : une solution rentable avec Cam Live.[/b][/i]"
         font_size: "13sp"
         size_hint_x: .85
         pos_hint: {"center_x": .5, "center_y": .3}
@@ -29,7 +49,7 @@
         markup: True
 
     MDRectangleFlatButton:
-        text: "Get Start"
+        text: "Démarrer"
         size_hint: .66, .065
         pos_hint: {"center_x": .5, "center_y": .18}
         background_color: 0, 0, 0, 0
@@ -57,3 +77,25 @@
         id: screen_main
         name: 'screen main'
         main_view: main_view
+
+
+<AProposBox>
+    label_propos: label_propos
+    size_hint_y: None
+    height: dp(150)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 2
+
+            FitImage:
+                source: "studio\\asset\holo.png"
+                pos_hint: {"center_x": 0.5, "center_y": 0.85}
+                size_hint: .5, .7
+            
+            MDLabel:
+                id: label_propos
+                text: ''
+                markup: True
+                halign: 'center'

@@ -1,7 +1,6 @@
 import cv2
 import time
 
-from studio.view.MyProcess import MyProcess
 from kivymd.utils import asynckivy
 
 
@@ -79,8 +78,7 @@ class VideoRecorder:
     def stop(self):
         if self.open:
             self.open = False
-            self.video_out.release()
-
+            self.video_cap.release()
         else:
             pass
     

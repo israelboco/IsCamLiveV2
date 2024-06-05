@@ -17,7 +17,6 @@ class TabVideo(MDFloatLayout, MDTabsBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        pass        
     
     def on_start_video(self):
         text = self.ids.source.text
@@ -29,28 +28,20 @@ class TabVideo(MDFloatLayout, MDTabsBase):
     
     async def start_source(self, text):
         cam = None
+        await asynckivy.sleep(1)
         for content in self.app.listCam:
-            print(content)
             listText= content[0]
             if text == listText:
                 cam = content[1]
                 break
-        if not cam:
-            await asynckivy.sleep(0.2)
-            start_video = CamCapture(text, self)
-            lancer = await start_video.lancer()
-            if lancer:
-                print(f"start_source====>>>> {lancer}")
-                self.app.listCam.append((text, lancer))
-        else:
-            await asynckivy.sleep(0.2)
-            start_video = CamCapture(text, self)
-            lancer = await start_video.lancer(cam)
         self.ids.spinner.active = False
-        self.camController.add_start_video(start_video)
-
-    def on_start_audio(self):
-        pass
+        lancer = await self.camController.add_start_video(text, self, cam)
+        if lancer:
+            print(f"start_source====>>>> {lancer}")
+            if not self.app.camController.videoCamera:
+                asynckivy.start(self.app.start_source(text))
+            if not cam:
+                self.app.listCam.append((text, lancer))
 
     def affiche_format(self):
         if not self.dropdown:
@@ -65,4 +56,4 @@ class TabVideo(MDFloatLayout, MDTabsBase):
     def selectDropdown(self, text):
         self.dropdown.select(text)
         self.ids.label_format.text = "[color=#4287f5]format :" + str(text) + "[/color]"
-    
+        self.camController.select_format(text)

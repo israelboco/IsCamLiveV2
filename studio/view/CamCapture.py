@@ -8,7 +8,6 @@ from kivymd.utils import asynckivy
 
 from studio.view import AudioRecorder, VideoRecorder
 from studio.view.CameraFrame import Camera
-from studio.view.MenuFrame import MenuBar
 
 
 class CamCapture:
@@ -20,9 +19,9 @@ class CamCapture:
         self.lien = lien
         self.screen_video = screen_video
         self.videoCamera = None
+        self.audioCamera = None
 
         self.cameraVideo = Camera()
-        self.mbar = MenuBar(self, self)
 
         # Initialiser l'enregistrement à False
         self.recording = False
@@ -38,12 +37,19 @@ class CamCapture:
         Clock.schedule_once(func, delay)
         # self.window.after(delay, func)
 
-    def stop(self):
-
+    def stop_record(self):
         self.recording = not self.recording
         self.frames_to_record = asynckivy.start(self.cameraVideo.enregistrer(self.frames_to_record))
         self.record_demarage = False
-
+    
+    def stop_video(self, mix=False):
+        self.videoCamera = None
+        if mix:
+            asynckivy.start(self.cameraVideo.stop(True))
+        else:
+            asynckivy.start(self.cameraVideo.stop(False))
+        if self.recording:
+            self.stop_record()
 
     def enregistrer(self):
         self.recording = True
@@ -116,8 +122,4 @@ class CamCapture:
 
         cv2.imwrite('{}_{}.{}'.format(base_path, n, ext), frame)
 
-    def on_break(self):
-        pass
-
-    def on_play(self):
-        pass
+        

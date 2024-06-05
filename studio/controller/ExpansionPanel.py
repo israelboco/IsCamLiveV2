@@ -9,10 +9,13 @@ from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelOneLine,
 
 class IconButtonAction(FocusBehavior, MagicBehavior, RotateBehavior, MDIconButton):
     
-    def __init__(self, **kwargs):
+    def __init__(self, unfocus_color=None, **kwargs):
         super().__init__(**kwargs)
         self.focus_color = "#DCE8F8"
-        self.unfocus_color = "#676767"
+        if not unfocus_color:
+            self.unfocus_color = "#676767"
+        else:
+            self.unfocus_color = unfocus_color
         self.opposite_colors: True
 # DCE8F8
 
@@ -43,7 +46,7 @@ class ExpansionPanelVid:
             icon="studio\\asset\holo.png",
             content=ContentExpandTwo(),  # content of panel
             panel_cls=MDExpansionPanelOneLine(  # content of header
-                text="Audio Pist",
+                text="Listes des cameras connecté",
             )
         )
 
