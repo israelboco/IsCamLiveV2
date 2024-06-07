@@ -63,23 +63,26 @@
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
                         pos_hint: {"center_y": .5}
-                        on_release: app.on_start_video()
+                        on_release: asynckivy.start(app.on_start_video())
 
                 MDBoxLayout:
                     orientation: "horizontal"
                     md_bg_color: "#676767"
                 
                     IconButtonAction:
+                        id: microphone
                         icon: "microphone-outline"
                         icon_size: dp(15)
                         style: "tonal"
                         theme_bg_color: "Custom"
                         theme_icon_color: "Custom"
                         icon_color: "#4287f5"
+                        on_release:
+                            app.listaudio()
                     
                     MDLabel:
-                        id: liste_microphone
-                        text: "[color=#4287f5]Audio[/color]"
+                        id: audio
+                        text: "[color=#4287f5]Audio Cam 1[/color]"
                         adaptive_height: True
                         font_size: dp(15)
                         size_hint_x: None
@@ -110,6 +113,7 @@
                         markup: True
 
                     IconButtonAction:
+                        id: save
                         icon: 'content-save'
                         style: "tonal"
                         theme_bg_color: "Custom"
@@ -298,7 +302,7 @@
                 theme_icon_color: "Custom"
                 pos_hint: {"center_y": .5}
                 icon_color: "#4287f5"
-                on_release: root.on_start_video()
+                on_release: asynckivy.start(root.on_start_video())
 
 
         MDBoxLayout:
@@ -349,6 +353,7 @@
                 markup: True
 
             IconButtonAction:
+                id: save
                 icon: 'content-save'
                 icon_size: dp(15)
                 style: "tonal"

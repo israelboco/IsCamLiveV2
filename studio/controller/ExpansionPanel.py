@@ -34,7 +34,7 @@ class ExpansionPanelVid:
     def start_expand_one(self):
         self.expand_one = MDExpansionPanel(
             icon="studio\\asset\holo.png",
-            content=ContentExpandOne(),  # content of panel
+            content=ContentExpandOne(id='connect'),  # content of panel
             panel_cls=MDExpansionPanelTwoLine(  # content of header
                 text="Connect to an online network",
                 secondary_text="Live connection",

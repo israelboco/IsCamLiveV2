@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-
+import multiprocessing
 import cv2
 from kivy.clock import Clock
 from kivy.core.image import Texture
@@ -11,6 +11,16 @@ from studio.view.CameraFrame import Camera
 
 
 class CamCapture:
+    # Initialiser l'enregistrement à False
+    recording = False
+    record_demarage = False
+    # Liste pour stocker les images à enregistrer
+    frames_to_record = []
+    
+    videoCamera = None
+    audioCamera = None
+
+    cameraVideo = Camera()
     
     def __init__(self, lien=None, screen_video=None, tab=None, **kwargs):
         super().__init__(**kwargs)
@@ -18,16 +28,6 @@ class CamCapture:
         self.capture = 0
         self.lien = lien
         self.screen_video = screen_video
-        self.videoCamera = None
-        self.audioCamera = None
-
-        self.cameraVideo = Camera()
-
-        # Initialiser l'enregistrement à False
-        self.recording = False
-        self.record_demarage = False
-        # Liste pour stocker les images à enregistrer
-        self.frames_to_record = []
 
 
     def captureCamera(self):
@@ -39,17 +39,23 @@ class CamCapture:
 
     def stop_record(self):
         self.recording = not self.recording
-        self.frames_to_record = asynckivy.start(self.cameraVideo.enregistrer(self.frames_to_record))
+        self.frames_to_record = asynckivy.start(self.cameraVideo.stop_enregistrer(self.frames_to_record))
+        self.frames_to_record = []
         self.record_demarage = False
     
     def stop_video(self, mix=False):
-        self.videoCamera = None
-        if mix:
-            asynckivy.start(self.cameraVideo.stop(True))
-        else:
-            asynckivy.start(self.cameraVideo.stop(False))
-        if self.recording:
-            self.stop_record()
+        try:
+            self.videoCamera = None
+            if mix:
+                asynckivy.start(self.cameraVideo.stop(True))
+            else:
+                asynckivy.start(self.cameraVideo.stop(False))
+            if self.recording:
+                self.stop_record()
+            self.videoCamera = None
+        except Exception as e:
+            self.videoCamera = None
+            print(e)
 
     def enregistrer(self):
         self.recording = True
@@ -96,25 +102,35 @@ class CamCapture:
 
                 # Enregistrer la frame si l'enregistrement est activé
                 if self.recording:
+                    # print(self.frames_to_record)
                     self.frames_to_record.append(frame)
                     if not self.record_demarage:
                         self.record_demarage = not self.record_demarage
-                        self.cameraVideo.record_demarage(self.frames_to_record)
-                        self.record_update()
+                        asynckivy.start(self.cameraVideo.record_demarage(self.frames_to_record))
+                        # self.record_update()
+                        self.frames_to_record = []
+                    if self.frames_to_record:
+                        asynckivy.start(self.cameraVideo.update_enregistrer(self.frames_to_record))                
 
             time = 1 / 30
             self.afert(time, self.update)
 
     def record_update(self, dt=None):
-        if self.recording and self.frames_to_record:
-            self.frames_to_record = self.cameraVideo.update_enregistrer(self.frames_to_record)
-            self.afert(10, self.record_update)
+        async def record():
+            if self.recording and self.frames_to_record:
+                await self.cameraVideo.update_enregistrer(self.frames_to_record)
+                self.frames_to_record = []
+                # processus = multiprocessing.Process(target=self.afert, args=(10, self.record_update))
+                # processus.start()
+                # processus.join()
+                # self.afert(20, self.record_update)
+        asynckivy.start(record())
 
         # self.record_update()
-
     def stopCamera(self):
         self.recording = not self.recording
         self.frames_to_record = asynckivy.start(self.cameraVideo.enregistrer(self.frames_to_record))
+        self.frames_to_record = []
         self.record_demarage = False
 
     def save_frame_camera_key(self, dir_path, basename, n, frame, ext='jpg'):

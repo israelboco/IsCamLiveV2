@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio et Vidéo Streaming</title>
+    <title>Audio et Vidéo Streaming sur Adress</span></title>
 </head>
 <body>
+    <h1>Audio et Vidéo Streaming sur Adress <span id="client_ip">{{ client_ip }}</span></h1>
+
     <video id="videoElement" controls autoplay></video>
     <audio id="audioElement" controls autoplay></audio>
-    <script src="template/client.js"></script>
+    <script src="{{ script_path }}"></script>
 </body>
 </html>

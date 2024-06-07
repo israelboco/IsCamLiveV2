@@ -15,7 +15,7 @@
                 secondary_text: "Cam live Web"
                 icon: 'web'
                 on_release:
-                    print('on_release')
+                    app.start_connect_live()
              
             CardConnect:
                 id: facebook
@@ -139,6 +139,7 @@
         width: dp(20)
 
         MDCard:
+            id: bage_card
             md_bg_color: "#fff000"
             size_hint: None, None
             width: dp(10)

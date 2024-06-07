@@ -21,7 +21,7 @@ class CamReductController:
                 self.screen_video.ids.cardImage.image.texture = image_texture
 
             time = 1 / 30
-            self.afert(time, self.update)
+            # self.afert(time, self.update)
 
         
         

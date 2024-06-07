@@ -1,20 +1,57 @@
-<SelectReseauBox>
-    label_propos: label_propos
+<ConnectLiveBox>
     size_hint_y: None
-    height: dp(150)
+    app: app
+    height: dp(100)
     MDScrollView:
 
         MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: 2
+            orientation: "vertical"
+            size_hint_y: 1
 
-            FitImage:
-                source: "studio\\asset\holo.png"
-                pos_hint: {"center_x": 0.5, "center_y": 0.85}
-                size_hint: .5, .7
-            
-            MDLabel:
-                id: label_propos
-                text: ''
-                markup: True
-                halign: 'center'
+            MDBoxLayout:
+                orientation: "horizontal"
+                adaptive_height: True
+
+                MDLabel:
+                    text: "[b][color=#4287f5]Connexion sur le réseau local [/color][/b]"
+                    markup: True
+                    halign: "left"
+                 
+                MDRectangleFlatButton:
+                    id: demarrer
+                    text: "Démarrer"
+                    md_bg_color: '#676767'
+                    on_release:
+                        root.demarrer()
+
+<ConnectLiveReseauBox>
+    size_hint_y: None
+    height: dp(70)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: 1
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                adaptive_height: True
+
+                MDLabel:
+                    text: "[b][color=#4287f5] Connexion sur le réseau local [/color][/b]"
+                    markup: True
+                    halign: "left"
+                 
+                MDRectangleFlatButton:
+                    id: demarrer
+                    text: "Démarrer"
+                    size_hint: .3, .065
+                    # pos_hint: {"center_x": .5, "center_y": .18}
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgb: rgba(52, 0, 231, 255)
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [5]
