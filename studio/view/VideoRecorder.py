@@ -29,14 +29,16 @@ class VideoRecorder:
     
     async def start(self):
         await asynckivy.sleep(0)
-        self.video_cap = cv2.VideoCapture(self.device_index)
+        self.video_cap = cv2.VideoCapture(self.device_index) #, cv2.CAP_DSHOW , cv2.CAP_FFMPEG
+        self.video_cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)  # Réduire la taille du tampon
+        self.video_cap.set(cv2.CAP_PROP_FPS, 30)  # Forcer un FPS constant
 
     async def demarage(self, lien=None, filename=None, cam=None):
         self.device_index = lien
-        user_home = os.path.expanduser('~')
-        downloads_folder = os.path.join(user_home, 'Downloads')
-        self.video_filename = "CamLive/enregistrement/" + filename
-        self.video_filename = os.path.join(downloads_folder, self.video_filename)
+        user_home = os.getcwd()
+        # downloads_folder = os.path.join(user_home, 'Downloads')
+        self.video_filename = os.path.join(user_home, 'enregistrement', "video", filename)
+        # self.video_filename = os.path.join(downloads_folder, self.video_filename)
         await asynckivy.sleep(0)
         try:
             # process = MyProcess(target_function=self.start, args=())

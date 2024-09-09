@@ -41,7 +41,7 @@
                     text: "[b][color=#4287f5] Connexion sur le réseau local [/color][/b]"
                     markup: True
                     halign: "left"
-                 
+                   
                 MDRectangleFlatButton:
                     id: demarrer
                     text: "Démarrer"
@@ -55,3 +55,189 @@
                             size: self.size
                             pos: self.pos
                             radius: [5]
+
+
+
+<AddCamBox>:
+    app: app
+    lien: lien
+    size_hint_y: None
+    height: dp(100)
+
+    MDBoxLayout:
+        orientation: "horizontal"
+
+        MDSpinner:  
+            id: spinner
+            size_hint: None, None
+            size: dp(20), dp(20)
+            pos_hint: {'center_y': .5}
+            active: False
+        
+        IconButtonAction:
+            id: list_camera
+            icon: "camera-outline"
+            icon_size: dp(20)
+            style: "tonal"
+            theme_bg_color: "Custom"
+            theme_icon_color: "Custom"
+            unfocus_color: '#262626'
+            icon_color: "#4287f5"
+            pos_hint: {"center_y": .5}
+            on_release: root.listcamera()
+
+        ClickableTextFieldRoundCam:
+            id: lien
+            hint_text: "source"
+            pos_hint: {"center_y": .5}
+
+        # MDRectangleFlatButton:
+        #     text: 'Ouvrir'
+        #     pos_hint: {'center_x': .4, 'center_y': .5}
+        #     on_release: 
+        #         root.open_cam(self.lien.text)
+
+
+<ClickableTextFieldRoundCam>:
+    size_hint_y: None
+    height: text_field.height
+    padding: dp(10)
+      
+    MDTextField:
+        id: text_field
+        hint_text: root.hint_text
+        icon_left: "magnify"
+        font_size: dp(10)
+        icon_left_color_normal: "#4287f5"
+        icon_left_color_focus: "#4287f5"
+        hint_text_color_normal: "#4287f5"
+        text_color_normal: "#4287f5"
+        line_color_focus: "#4287f5"
+        line_color_normal: "#4287f5"
+        text: root.text
+        helper_text_mode: "on_focus"    
+        size_hint_x: None
+        width: dp(250) 
+        on_text: 
+            root.text = self.text
+
+    IconButtonAction:
+        icon: "file-upload-outline"
+        icon_size: dp(20)
+        style: "tonal"
+        theme_bg_color: "Custom"
+        theme_icon_color: "Custom"
+        icon_color: "#4287f5"
+        unfocus_color: '#262626'
+        pos_hint: {"center_y": .5}
+        pos: text_field.width - self.width + dp(5), 0
+        theme_text_color: "Hint"
+        on_release: 
+            root.file_manager_open()
+            # asynckivy.start(app.on_start_video()) 
+
+<ParamBox>:
+    app: app
+    size_hint_y: None
+    height: dp(100)
+    # width: dp(100)
+
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 1
+            # adaptive_height: True
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                padding: dp(10)
+                spacing: dp(10)
+
+                MDTextField:
+                    id: text_field
+                    hint_text: 'stockage'
+                    font_size: dp(10)
+                    icon_left_color_normal: "#4287f5"
+                    icon_left_color_focus: "#4287f5"
+                    hint_text_color_normal: "#4287f5"
+                    text_color_normal: "#4287f5"
+                    line_color_focus: "#4287f5"
+                    line_color_normal: "#4287f5"
+                    text: 'root.text'
+                    helper_text_mode: "on_focus"
+
+                IconButtonAction:
+                    icon: "import"
+                    icon_size: dp(20)
+                    style: "tonal"
+                    theme_bg_color: "Custom"
+                    theme_icon_color: "Custom"
+                    icon_color: "#4287f5"
+                    pos_hint: {"center_y": .5}
+                    on_release: 
+                        root.folder_manager_open()
+
+            # MDRectangleFlatButton:
+            #     text: 'Enregistrer'
+            #     pos_hint: {"center_y": .5}
+            #     on_release: 
+                # root.file_manager_open()
+
+
+<DetectPerson>
+    size_hint_y: None
+    height: dp(150)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 1.2
+
+            MDTextField:
+                id: face
+                hint_text: "Face en %"
+                icon_left: "face-recognition"
+                font_size: dp(15)
+                text: "20"
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"  
+                helper_text_mode: "on_error"
+                on_text: root.validate_float(self)
+
+            MDTextField:
+                id: profile
+                hint_text: "Profile en %"
+                icon_left: "face-man-profile"
+                font_size: dp(15)
+                text: "20"
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"  
+                helper_text_mode: "on_error"
+                on_text: root.validate_float(self)   
+            
+            MDTextField:
+                id: eye
+                hint_text: "Yeux en %"
+                icon_left: "eye"
+                font_size: dp(15)
+                text: "20"
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"  
+                helper_text_mode: "on_error"
+                on_text: root.validate_float(self)

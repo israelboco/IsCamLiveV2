@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['C:/Users/issrael BOCO/Desktop/ISRAEL/Projet/camaraLive/main.py'],
+    ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:/Users/issrael BOCO/Desktop/ISRAEL/Projet/camaraLive/studio/view/kv/main.kv', 'studio/view/kv/main.kv')],
+    datas=[('C:/Users/issrael BOCO/Desktop/ISRAEL/Projet/camaraLive/studio', 'studio/')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

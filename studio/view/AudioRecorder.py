@@ -15,10 +15,11 @@ class AudioRecorder:
         self.frames_per_buffer = 1024
         self.channels = 2
         self.format = pyaudio.paInt16
-        user_home = os.path.expanduser('~')
-        downloads_folder = os.path.join(user_home, 'Downloads')
+        user_home = os.getcwd()
+        # downloads_folder = os.path.join(user_home, 'Downloads')
         self.audio_filename = "CamLive/enregistrement/{}.wav".format(filename)
-        self.video_filename = os.path.join(downloads_folder, self.audio_filename)
+        self.video_filename = os.path.join(user_home, 'enregistrement', "audio", "{}.wav".format(filename))
+        # self.audio_filename = os.path.join(downloads_folder, self.audio_filename)
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(format=self.format,
                                       channels=self.channels,

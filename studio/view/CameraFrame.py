@@ -33,6 +33,7 @@ class Camera():
         else:
             self.lien = lien
             lien = lien + "/video"
+        print(lien)
         self.filename = datetime.now().strftime("%A_%d_%B_%Y_%I_%M_%S")
         self.filename_video = "{}/video.mp4".format(self.filename)
         self.filename_audio = "{}/audio".format(self.filename)

@@ -1,6 +1,6 @@
+#:import asynckivy kivymd.utils.asynckivy
+
 <ContentExpandOne>:
-    # adaptive_height: True
-    # md_bg_color: "#ffffff"
     size_hint_y: .5
 
     MDScrollView:
@@ -24,7 +24,7 @@
                 icon: "facebook"
                 on_release:
                     print('on_release')
-            
+
             CardConnect:
                 id: youtube
                 text: "Connect to plateforme Youtube Live"
@@ -32,15 +32,6 @@
                 icon: 'youtube'
                 on_release:
                     print('on_release')
-            
-            # TwoLineIconListItem:
-            #     text: "(050)-123-45-67"
-            #     secondary_text: "Mobile"
-
-            #     IconLeftWidget:
-            #         icon: 'instagram'
-            #     IconRightWidget:
-            #         icon: 'instagram'
 
 
 <ContentExpandTwo>:
@@ -84,7 +75,7 @@
                 theme_icon_color: "Custom"
                 icon_color: "#4287f5"
                 adaptive_width: True
-            
+                
             IconButtonAction:
                 icon: "microphone-outline"
                 adaptive_height: True
@@ -133,7 +124,7 @@
         adaptive_width: True
         on_release:
             print(root.id)
-    
+                 
     MDRelativeLayout:
         size_hint_x: None
         width: dp(20)
@@ -145,22 +136,249 @@
             width: dp(10)
             height: dp(10)
             radius: 24
-            pos_hint:{"center_x": .1, "center_y": .85}
-
+            pos_hint:{"center_x": .1, "center_y": .75}
 
 
 <CardReducteImage>:
     md_bg_color: "#676767" 
+    app: app
+    padding: dp(10)
+
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            # md_bg_color: "ffffff"
+            size_hint_y: 1
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                # md_bg_color: "ffffff"
+                adaptive_height: True
+
+                MDSpinner:  
+                    id: spinner
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    pos_hint: {"center_y": 65}
+                    active: False  
+                                            
+                IconButtonAction:
+                    id: list_camera
+                    icon: "camera-outline"
+                    icon_size: dp(20)
+                    style: "tonal"
+                    theme_bg_color: "Custom"
+                    theme_icon_color: "Custom"
+                    icon_color: "#4287f5"
+                    pos_hint: {"center_y": .65}
+                    on_release: root.listcamera()
+
+                ClickableTextFieldRoundRedute:
+                    cam_reduct: root
+                    id: lien
+                    adaptive_width: True
+                    hint_text: "lien source"
+                    pos_hint: {"center_x": .7, "center_y": .65}
+            
+            MDLabel:
+                text: "[color=#4287f5]Detection[/color]"
+                adaptive_size: True
+                pos_hint: {"center_x": .5}
+                markup: True
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                size_hint_y: .5
+                spacing: dp(10)
+
+                Image:
+                    id: i_source
+                    size_hint: .7, .9
+                    pos_hint: {"center_y": .5}
+                
+                IconButtonAction:
+                    icon: "import"
+                    icon_size: dp(20)
+                    style: "tonal"
+                    theme_bg_color: "Custom"
+                    theme_icon_color: "Custom"
+                    icon_color: "#4287f5"
+                    pos_hint: {"center_y": .5}
+                    on_release: 
+                        root.file_manager_open()
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(10)
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: "[color=#4287f5]Personne[/color]"
+                            adaptive_size: True
+                            markup: True
+                        
+                        MDSwitch:
+                            id: check_person
+                            adaptive_size: True
+                            pos_hint: {'center_x': .5, 'center_y': .5}
+                            on_active: root.on_checkbox_active("Personne", self.active)
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: "[color=#4287f5]Objet[/color]"
+                            adaptive_size: True
+                            markup: True
+                        
+                        MDSwitch:
+                            id: check_objet
+                            adaptive_size: True
+                            pos_hint: {'center_x': .5, 'center_y': .5}
+                            on_active: root.on_checkbox_active("Objet", self.active)
+
+                MDRectangleFlatButton:
+                    id: lancer
+                    text: 'Lancer'
+                    pos_hint: {"center_y": .5}
+                    on_release:
+                        root.lancerTraitement()
+                
+
+
+<CardScrollImage>:
+    md_bg_color: "#676767" #ffffff
+    padding: "10dp"
+    spacing: "5dp"
     radius: 24
     image: image
-    size_hint_x: None
-    width: dp(100)
+    lecture: lecture
+    size_hint_y: None
+    height: dp(180)
+    on_release:
+        app.start_card_view(self)
 
     MDBoxLayout:
         md_bg_color: "#676767"
+        orientation: "vertical"
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(30)
+
+            MDCard:
+                id: bage_image
+                md_bg_color: "#fff000"
+                size_hint: None, None
+                width: dp(10)
+                height: dp(10)
+                radius: 24
+                pos_hint:{"center_x": .15, "center_y": .5}
+
+            IconButtonAction:
+                id: switch
+                icon: "video-switch-outline"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                pos_hint:{"center_x": .55, "center_y": .5}
+                on_release:
+                    root.camController.on_switch()
+
+            IconButtonAction:
+                id: save
+                icon: "content-save-outline"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                pos_hint:{"center_x": .75, "center_y": .5}
+                on_release:
+                    root.camController.on_record()
+             
+            IconButtonAction:
+                id: close
+                icon: "close-outline"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                pos_hint:{"center_x": .94, "center_y": .5}
+                on_release:
+                    app.remove_tab(root)
 
         Image:
             id: image
-            source: "studio\\asset\\texture_image.jpg"
-            size_hint: root.size 
+            source: "studio/asset/texture_image.jpg"
+            size_hint: None, None
+            width: root.width - dp(50)
+            height: root.height - dp(75)
+            padding: dp(10)
             pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            md_bg_color: "#676767"
+            radius: 24
+
+            IconButtonAction:
+                id: microphone
+                icon: "microphone-off"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                on_release:
+                    root.on_audio()
+
+
+            IconButtonAction:
+                id: play
+                icon: "play"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                on_release:
+                    asynckivy.start(root.camController.on_play()) if self.icon == 'play' else root.camController.on_break()
+
+            IconButtonAction:
+                id: stop
+                icon: "stop"
+                size_hint_x: .1
+                icon_size: dp(15)
+                pos_hint:{"center_y": .5}
+                style: "tonal"
+                theme_bg_color: "Custom"
+                theme_icon_color: "Custom"
+                icon_color: "#4287f5"
+                on_release:
+                    root.camController.on_stop()
+
+            MDLabel:
+                id: lecture
+                text: "[color=#ffffff]00:00:00[/color]"
+                size_hint_x: .2
+                pos_hint:{"center_y": .5}
+                font_size: dp(12)
+                markup: True

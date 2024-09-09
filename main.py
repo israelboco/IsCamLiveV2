@@ -1,96 +1,105 @@
-import kivymd
+import kivymd  
 from kivy.lang import Builder
-from kivymd.app import MDApp # type: ignore
+from kivymd.app import MDApp 
 from kivymd.font_definitions import fonts
 from kivymd.uix.screen import MDScreen
 from kivy.uix.button import Button
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.button import MDIconButton
-# from kivy.uix.dropdown import DropDown
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.utils import asynckivy # type: ignore
+from kivymd.utils import asynckivy 
 from kivymd.toast import toast
-from threading import Thread
-
+from kivy.core.window import Window
 from studio.Service.NotificationService import NotificationService
 from studio.constants.GetNetworks import GetNetworks
 from studio.controller.ConnectLiveController import ConnectLiveController
-from studio.controller.CamController import CamController
-from studio.controller.ExpansionPanel import ExpansionPanelVid, FocusButton, IconButtonAction
-from kivymd.uix.expansionpanel import MDExpansionPanel # type: ignore
+from studio.controller.CamController import  CamController
 from studio.enum.FormatEnum import FormatEnum
+from studio.model.Data import Data
+from studio.view import CamViewImage
+from studio.controller.ExpansionPanel import FocusButton, IconButtonAction
 from studio.view.CamCapture import CamCapture
 from studio.view.CameraFrame import Camera
 from studio.view.CardAudio import CardAudio
-from studio.view.MyProcess import  MyProcess
+from studio.view.MyProcess import MyProcess
 from studio.view.ScreenMain import MainScreenView, ScreenMain
-from studio.view.TabVideos import TabVideo
-from kivymd.icon_definitions import md_icons
-
-# Builder.load_file("studio/view/kv/main.kv")
-
+from studio.view.TabVideos import CardScrollImage
 
 class AppCameraLive(MDApp):
-    index = 1
-    listProces = []
-    listCam = []
-    camController = CamController()
-    connectLiveController = None
-    menu_items_format = []
-    menu_items_camera = []
-    resource_cam_thread = None
-    # items = [f"{index}" for index in list(FormatEnum)]
  
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_all_kv_files(self.directory)
-        # self.dropdown = MDDropdownMenu()
+        self.dropdown = MDDropdownMenu()
         self.main_view = MainScreenView()
         self.getnetworks = GetNetworks()
         self.notificationService = NotificationService()
         self.screenMain = self.main_view.screen_main
+        self.data = Data(self)
 
     def build(self) -> MDScreen:
-        self.title = "Camera Live"
+        self.title = "Cam Live"
+        Window.icon = "studio/asset/Logo.ico"
         return self.main_view
 
     def on_start(self):
-        tab = TabVideo(id='1', title="CamLive 1")
-        self.screenMain.ids.tab_videos.add_widget(tab)
         self.affiche_format()
         self.affiche_camera()
         self.affiche_audio()
-        expansion = ExpansionPanelVid()
-        expansion.start_expand_one()
-        expansion.start_expand_two()
-        self.screenMain.ids.one_widget.add_widget(expansion.expand_one)
-        # self.screenMain.ids.two_widget.add_widget(expansion.expand_two)
+        self.data.expansion.start_expand_one() 
+        self.data.expansion.start_expand_two()
+        self.data.db_manager.create_table()
+    
+    def start_card_view(self, controle=None):
+        if self.data.expand_two:
+            self.screenMain.ids.two_widget.add_widget(self.data.expansion.expand_two)
+            self.data.expand_two = False
+            self.data.expansion.expand_two.content.controle = controle
+            self.data.expansion.expand_two.content.start()
+        else:
+            self.screenMain.ids.two_widget.remove_widget(self.data.expansion.expand_two)
+            self.data.expand_two = True
+            self.data.expansion.expand_two.content.controle = None
 
+
+    def start_connexion(self):
+        if self.data.expand_one:
+            self.screenMain.ids.one_widget.add_widget(self.data.expansion.expand_one)
+            self.data.expand_one = False
+        else:
+            self.screenMain.ids.one_widget.remove_widget(self.data.expansion.expand_one)
+            self.data.expand_one = True
+    
+    def open_param(self):
+        self.notificationService.open_param()
 
     def on_stop(self):
-        pass
+        print("Arrêt du programme principal...")
+        self.data.manager.stop_all_threads()
+        self.data.db_manager.close_connection()
 
-    def add_tab(self):
+    def add_tab(self, text=None, cam=None):
         try:
-            self.index += 1
-            name_tab = f"CamLive {self.index}"
-            tab = TabVideo(
-                id=str(self.index),
-                tab_label_text=f"[ref={name_tab}][font={fonts[-1]['fn_regular']}]{md_icons['close']}[/font][/ref]{name_tab}",
-            )
-            self.screenMain.ids.tab_videos.add_widget(
-                tab
-            )
+            if text:
+                self.data.index += 1
+                tab = CardScrollImage(id=str(self.data.index), app=self, text=text)
+                tab.on_start()
+                self.screenMain.ids.box_video.add_widget(tab) 
+            else:
+                self.data.index += 1
+                tab = CardScrollImage(id=str(cam[1]), app=self, text=cam[2])
+                tab.on_start()
+                self.screenMain.ids.box_video.add_widget(tab) 
         except Exception as e:
             print(e)
         self.affiche_audio()
 
-    def remove_tab(self):
-        if self.index > 1:
-            self.index -= 1
-        self.screenMain.ids.tab_videos.remove_widget(
-            self.screenMain.ids.tab_videos.get_tab_list()[-1]
+    def remove_tab(self, tab=None):
+        if self.data.index > 1:
+            self.data.index -= 1
+        tab.camController.on_stop()
+        self.screenMain.ids.box_video.remove_widget(
+            tab
         )
+        self.affiche_audio()
 
     def on_ref_press(
             self,
@@ -104,12 +113,12 @@ class AppCameraLive(MDApp):
             if instance_tab.tab_label_text == instance_tab_label.text:
                 instance_tab_videos.remove_widget(instance_tab_label)
                 self.index -= 1
-                break
+                break 
 
     async def on_start_video(self):
         self.screenMain.ids.spinner.active = True
         await asynckivy.sleep(2)
-        if self.camController.videoCamera:
+        if self.data.camController.videoCamera:
             self.screenMain.ids.spinner.active = False
             return toast("stopper d'abord la camera en cours.")
         self.resource_cam_thread = None
@@ -117,30 +126,29 @@ class AppCameraLive(MDApp):
         self.screenMain.ids.spinner.active = False
     
     async def async_cam_thread(self):
-        self.resource_cam_thread = Thread(target=self.cam_thread)
-        self.resource_cam_thread.start()
-
-    def cam_thread(self):
         text = self.screenMain.ids.lien.text
+        print(text)
         if text:
             asynckivy.start(self.start_source(text))
     
     async def start_source(self, text):
         cam = None
-        for content in self.listCam:
+        for content in self.data.listCam:
             listText= content[0]
             if text == listText:
                 cam = content[1]
                 break
-        lancer = await self.camController.add_start_video(text, self.screenMain, cam)
-        if not self.connectLiveController:
-            print('===============>>>>>>> connectLiveController')
-            self.connectLiveController = ConnectLiveController(self.camController)
+        lancer = await self.data.camController.add_start_video(text, self.screenMain, cam, self)
+        if not lancer:
+            return
+        if not self.data.connectLiveController:
+            print("===============>>>>>>> connectLiveController")
+            self.data.connectLiveController = ConnectLiveController(self.data.camController)
         if lancer:
             print(f"start_source====>>>> {lancer}")
             if not cam:
-                self.listCam.append((text, lancer))
-
+                self.data.listCam.append((text, lancer))
+                
     def affiche_format(self):
        
         self.menu_items_format = [
@@ -151,10 +159,9 @@ class AppCameraLive(MDApp):
             } for index in list(FormatEnum)
         ]
 
-        self.dropdown1 = MDDropdownMenu(items=self.menu_items_format, width_mult=4, caller=self.screenMain.ids.shape)
+        self.dropdown1 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_format, width_mult=3, caller=self.screenMain.ids.shape)
 
     def listDropdown(self):
-        print('listDropdown')
         self.dropdown1.open()
 
     def affiche_camera(self):
@@ -162,12 +169,13 @@ class AppCameraLive(MDApp):
         self.menu_items_camera = [
             {
                 "viewclass": "OneLineListItem",
-                "text": str(index['interface']),
+                "text": str(index["interface"]),
+                "trailing_icon": str(index["trailing_icon"]),
                 "on_release": lambda x=index: self.selectDropdownNetwork(x),
             } for index in self.getnetworks.get_networks()
         ]
 
-        self.dropdown2 = MDDropdownMenu(items=self.menu_items_camera, width_mult=3, caller=self.screenMain.ids.list_camera)
+        self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.screenMain.ids.list_camera)
 
 
     def affiche_audio(self):
@@ -177,55 +185,77 @@ class AppCameraLive(MDApp):
                 "viewclass": "OneLineListItem",
                 "text": f"Audio Cam {str(index + 1)}",
                 "on_release": lambda x=f"Audio Cam {str(index + 1)}": self.selectDropdownAudio(x),
-            } for index in range(0, self.index)
+            } for index in range(0, self.data.index)
         ]
 
-        self.dropdown3 = MDDropdownMenu(items=self.menu_items_audio, width_mult=3, caller=self.screenMain.ids.microphone)
+        self.dropdown3 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_audio, width_mult=3, caller=self.screenMain.ids.microphone)
 
     def listaudio(self):
         self.dropdown3.open()
 
     def listcamera(self):
-        self.dropdown2.open()
+       self.dropdown2.open()
 
-    # @staticmethod
+
     def selectDropdown(self, text):
         self.screenMain.ids.label_format.text = "[color=#4287f5]format :" + str(text.value) + "[/color]"
-        self.camController.select_format(text.value)
+        self.data.camController.select_format(text.value)
+        if self.data.define_session:
+            select_format_sql = "SELECT * FROM configs WHERE name=? AND fk_session=?"
+            format = self.data.db_manager.fetch_data(select_format_sql, ("format", self.data.define_session[0]))
+            if not format:
+                insert_sql = "INSERT INTO configs (name, reference, fk_session) VALUES (?, ?, ?)"
+                self.data.db_manager.insert_data(insert_sql, ("format", text.value, self.data.define_session[0]))
+            else:
+                update_sql = "UPDATE configs SET reference = ? WHERE name = ? AND fk_session = ?"
+                self.data.db_manager.update_data(update_sql, (text, "format", self.data.define_session[0]))
         if self.dropdown1:
             self.dropdown1.dismiss()
     
     def selectDropdownNetwork(self, text):
-        self.screenMain.ids.lien.text = str(text['interface'])
-        # self.camController.start_source(text)
+        ip = text["ip_address"]
+        if ip == 0:
+            self.screenMain.ids.lien.text = str(f"{ip}")
+        else:
+            self.screenMain.ids.lien.text = str(f"https://{ip}")
         if self.dropdown2:
             self.dropdown2.dismiss()
     
     def selectDropdownAudio(self, text):
-        self.screenMain.ids.audio.text = str('[color=#4287f5]' + text + '[/color]')
+        self.screenMain.ids.audio.text = str("[color=#4287f5]" + text + "[/color]")
         # self.camController.start_source(text)
+        if self.data.define_session:
+            select_audio_sql = "SELECT * FROM configs WHERE name=? AND fk_session=?"
+            audio = self.data.db_manager.fetch_data(select_audio_sql, ("audio", self.data.define_session[0]))
+            if not audio:
+                insert_sql = "INSERT INTO configs (name, reference, fk_session) VALUES (?, ?, ?)"
+                self.data.db_manager.insert_data(insert_sql, ("audio", text, self.data.define_session[0]))
+            else:
+                update_sql = "UPDATE configs SET reference = ? WHERE name = ? AND fk_session = ?"
+                self.data.db_manager.update_data(update_sql, (text, "audio", self.data.define_session[0]))
         if self.dropdown3:
             self.dropdown3.dismiss()
-    
+     
     def start_connect_live(self):
-        if not self.camController.videoCamera:
-            return toast('connectez vous a un camera')
+        if not self.data.camController.videoCamera:
+            return toast("connectez vous a un camera")
         self.notificationService.start_connect_live()
     
     def demarer_connect_live_box(self):
-        self.connectLiveController.start()
+        self.data.connectLiveController.start()
     
     def stop_connect_live_box(self):
-        self.connectLiveController.stop()
+        self.data.connectLiveController.stop()
 
-    # def tap_expansion_chevron(
-    #     self, panel: MDExpansionPanel, chevron: MDIconButton
-    # ):
-    #     panel.open() if not panel.is_open else panel.close()
-    #     panel.set_chevron_down(
-    #         chevron
-    #     ) if not panel.is_open else panel.set_chevron_up(chevron)
-
+    def demarer_session(self):
+        if self.data.define_session:
+            select_cams_sql = "SELECT * FROM camlists WHERE fk_session=?"
+            cams = self.data.db_manager.fetch_data(select_cams_sql, (self.data.define_session[0],))
+            if cams:
+                print(cams)
+                for cam in cams:
+                    print(cam)
+                    self.add_tab(None, cam)
 
 app = AppCameraLive()
 app.run()

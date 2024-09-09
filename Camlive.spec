@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['C:/Users/issrael BOCO/Desktop/ISRAEL/Projet/camaraLive/main.py'],
+    ['main.py'],
     pathex=[],
     binaries=[],
     datas=[('C:/Users/issrael BOCO/Desktop/ISRAEL/Projet/camaraLive/studio', 'studio/')],
@@ -32,7 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['C:\\Users\\issrael BOCO\\Downloads\\Logo-500x500-px-_1_.ico'],
+    icon=['C:\\Users\\issrael BOCO\\Desktop\\ISRAEL\\Projet\\camaraLive\\studio\\asset\\Logo.ico'],
 )
 coll = COLLECT(
     exe,

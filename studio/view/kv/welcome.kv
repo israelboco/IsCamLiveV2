@@ -2,7 +2,7 @@
     md_bg_color: "#262626"
 
     Image:
-        source: "studio\\asset\holo.png"
+        source: "studio/asset/holo.png"
         pos_hint: {"center_x": 0.05, "center_y": 0.94}
         size_hint: 0.2, 0.2
     
@@ -14,20 +14,9 @@
         # pos_hint: {"center_x": 0.85, "center_y": 0.94}
         on_release:
             root.apropos()
-    
-    # IconButtonAction:
-    #     icon: "cog-outline"
-    #     icon_size: dp(25)
-    #     style: "tonal"
-    #     theme_bg_color: "Custom"
-    #     theme_icon_color: "Custom"
-    #     icon_color: "#4287f5"
-    #     unfocus_color: "#262626"
-    #     pos_hint: {"center_x": 0.95, "center_y": 0.94}
-    #     on_release:
 
     Image:
-        source: "studio\\asset\holo.png"
+        source: "studio/asset/holo.png"
         pos_hint: {"center_x": 0.5, "center_y": 0.65}
         size_hint: .7, .8
 
@@ -54,8 +43,7 @@
         pos_hint: {"center_x": .5, "center_y": .18}
         background_color: 0, 0, 0, 0
         on_release:
-            root.main_view.transition.direction = "left"
-            root.main_view.current = "screen main"
+            app.data.sessions()
         canvas.before:
             Color:
                 rgb: rgba(52, 0, 231, 255)
@@ -72,7 +60,8 @@
 
     ScreenWelcome:
         main_view: main_view
-    
+        name: 'screen welcome'    
+        
     ScreenMain:
         id: screen_main
         app: app
@@ -91,12 +80,142 @@
             size_hint_y: 2
 
             FitImage:
-                source: "studio\\asset\holo.png"
+                source: "studio/asset/holo.png"
                 pos_hint: {"center_x": 0.5, "center_y": 0.85}
-                size_hint: .5, .7
-            
+                size_hint: .5, .7            
+
             MDLabel:
                 id: label_propos
                 text: ''
                 markup: True
                 halign: 'center'
+
+
+<Connexion>
+    text_username: text_username
+    text_password: text_password
+    text_email: text_email
+    size_hint_y: None
+    height: dp(150)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 1.2
+
+            MDTextField:
+                id: text_username
+                hint_text: "Nom d'utilisateur"
+                icon_left: "account"
+                font_size: dp(15)
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"  
+
+            MDTextField:
+                id: text_email
+                hint_text: "Email"
+                icon_left: "email"
+                font_size: dp(15)
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"     
+            
+            MDTextField:
+                id: text_password
+                hint_text: 'Mot de password'
+                icon_left: "form-textbox-password"
+                font_size: dp(15)
+                password: True
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"     
+
+
+<Compte>
+    text_username: text_username
+    text_email: text_email
+    sessions: sessions
+    size_hint_y: None
+    height: dp(150)
+    padding: dp(10)
+    spacing: dp(10)
+    MDScrollView:
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 1
+
+            MDTextField:
+                id: text_username
+                hint_text: "Nom d'utilisateur"
+                icon_left: "account"
+                font_size: dp(15)
+                mode: "round"
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus"  
+
+            MDTextField:
+                id: text_email
+                hint_text: "Email"
+                icon_left: "email"
+                mode: "round"
+                font_size: dp(15)
+                icon_left_color_normal: "#4287f5"
+                icon_left_color_focus: "#4287f5"
+                hint_text_color_normal: "#4287f5"
+                text_color_normal: "#4287f5"
+                line_color_focus: "#4287f5"
+                line_color_normal: "#4287f5"
+                helper_text_mode: "on_focus" 
+
+            TextFieldRound:
+                id: sessions
+                app: app    
+
+
+
+<TextFieldRound>:
+    text_field: text_field
+    size_hint_y: None
+    height: text_field.height
+    padding: dp(10)
+     
+    MDTextField:
+        id: text_field
+        hint_text: 'Select Session'
+        font_size: dp(15)
+        text: root.text 
+        icon_left: "content-save-outline"
+        mode: "round"
+        icon_left_color_normal: "#4287f5"
+        icon_left_color_focus: "#4287f5"
+        hint_text_color_normal: "#4287f5"
+        text_color_normal: "#4287f5"
+        line_color_focus: "#4287f5"
+        line_color_normal: "#4287f5"
+        helper_text_mode: "on_focus" 
+
+    MDIconButton:
+        icon: "menu-down-outline"
+        on_release: root.affiche_session()
+        pos_hint: {"center_y": .5}
+        pos: text_field.width - self.width - dp(5), 0
+        theme_text_color: "Hint"
