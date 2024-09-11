@@ -1,9 +1,7 @@
-from deepface import DeepFace
 import cv2
 from datetime import datetime
 import math
 from collections import namedtuple
-#from ultralytics import YOLO
 from PIL import Image
 import numpy as np
 from kivy.graphics.texture import Texture
@@ -12,7 +10,6 @@ from kivy.clock import Clock
 import time
 import os
 from kivymd.toast import toast
-# import face_recognition # type: ignore
 
 class Traitement:
     
@@ -23,11 +20,6 @@ class Traitement:
         with open(os.path.join(self.current_dir, "config", "coco.names"), "r") as f:
             self.classes = [line.strip() for line in f.readlines()]
         self.traints = []
-        # Get files from openCV : https://github.com/opencv/opencv/tree/3.4/data/haarcascades
-        # self.classCascadefacial = cv2.CascadeClassifier(os.path.join(self.current_dir, "config", "haarcascade_frontalface_default.xml"))
-        # self.face_cascade = cv2.CascadeClassifier(os.path.join(self.current_dir, "config", "haarcascade_frontalface_default.xml"))
-        # self.profile_cascade = cv2.CascadeClassifier(os.path.join(self.current_dir, "config", "haarcascade_profileface.xml"))
-        # self.eye_cascade = cv2.CascadeClassifier(os.path.join(self.current_dir, "config", "haarcascade_eye.xml"))
         self.gray_target = None
         self.encours = False
     
@@ -62,55 +54,12 @@ class Traitement:
     def jsonDictDecoder(self, jsonDict):
         return namedtuple('X', jsonDict.keys())(*jsonDict.values())
         
-    # async def object_detection(self, path):
-    #     try:
-    #         img = cv2.imread(path)
-    #         results = self.model(img, stream=True)
-    #         for r in results:
-    #             await asynckivy.sleep(0) 
-    #             boxes = r.boxes
-    #             for box in boxes:
-    #                 x1, y1, x2, y2 = box.xyxy[0]
-    #                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-    #                 w, h = x2 - x1, y2 - y1
-    #                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-    #                 conf = math.ceil((box.conf[0] * 100)) / 100
-    #                 cls = box.cls[0]
-    #                 name = self.classNames[int(cls)]
-
-    #                 # Préparation du texte
-    #                 text = f'{name} {conf}'
-
-    #                 # Calcul de la largeur et de la hauteur du texte
-    #                 (text_width, text_height), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-
-    #                 # Dessiner le rectangle de fond pour le texte
-    #                 cv2.rectangle(img, (x1, y1 - text_height - 10), (x1 + text_width, y1), (0, 255, 0), -1)
-
-    #                 # Placer le texte au-dessus du rectangle
-    #                 cv2.putText(img, text, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
-    #         # Conversion de l'image OpenCV en texture Kivy
-    #         buf1 = cv2.flip(img, 0)
-    #         buf = buf1.tobytes()
-    #         image_texture = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-    #         image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-    #         return image_texture
-
-    #     except Exception as e:
-    #         print("object_detection ===>")
-    #         print(e)
-    #     return None
-
 
     async def object_dectionz(self, path):
         try:
-            # Charger l'image fournie
-            # image = cv2.cvtColor(path, cv2.COLOR_BGR2GRAY)
+            
             image = path
             height, width = image.shape[:2]
-            # Initialiser le détecteur ORB (ou utiliser SIFT/SURF si disponible)
             blob = cv2.dnn.blobFromImage(image, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             self.net.setInput(blob)
 
@@ -143,7 +92,6 @@ class Traitement:
                     indices = indices.flatten() 
                     for i in indices:
                         await asynckivy.sleep(0)
-                        # i = i[0]
                         box = boxes[i]
                         x, y, w, h = box[0], box[1], box[2], box[3]
                         label = str(self.classes[class_ids[i]])
@@ -308,42 +256,3 @@ class Traitement:
                 await self.person_detected(target)
         except Exception as e:
             print("Erreur lors de la comparaison des visages:", e)
-
-        # buf1 = cv2.flip(small_frame, 0)
-        # buf = buf1.tobytes()
-        # image_texture = Texture.create(size=(small_frame.shape[1], small_frame.shape[0]), colorfmt='bgr')
-        # image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-        # self.image.texture = image_texture
-
-        # source_image = face_recognition.load_image_file(target.detect_path)
-        
-        # source_encoding = face_recognition.face_encodings(source_image)[0]
-
-        # gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-        # # Detect faces in the current frame
-        # faces = self.face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-
-        # for (x, y, w, h) in faces:
-        #     await asynckivy.sleep(0)
-        #     # Extract the face region from the RGB frame for accurate comparison
-        #     roi_rgb = rgb_frame[y:y+h, x:x+w]
-        #     face_encodings = face_recognition.face_encodings(roi_rgb)
-            
-        #     if face_encodings:
-        #         face_encoding = face_encodings[0]
-                
-        #         # Compare the detected face with the source image encoding
-        #         matches = face_recognition.compare_faces([source_encoding], face_encoding, tolerance=0.6)
-        #         face_distances = face_recognition.face_distance([source_encoding], face_encoding)
-        #         best_match_index = np.argmin(face_distances)
-                
-        #         if matches[best_match_index]:
-        #             await self.person_detected(target)
-        #             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-        #             buf1 = cv2.flip(frame, 0)
-        #             buf = buf1.tobytes()
-        #             image_texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-        #             image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-        #             self.save_image(frame)
