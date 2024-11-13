@@ -8,7 +8,7 @@ from studio.controller.CamController import CamController
 from studio.model.ThreadClass import ThreadManager
 from kivymd.uix.dialog import MDDialog
 from kivymd.toast import toast
-from kivymd.uix.button import MDRectangleFlatButton
+from kivymd.uix.button import MDRectangleFlatButton, MDRaisedButton
 from studio.controller.ExpansionPanel import ExpansionPanelVid
 from kivy.properties import StringProperty
 from kivymd.uix.list import OneLineAvatarListItem
@@ -56,22 +56,25 @@ class Data:
                     content_cls=Connexion(),
                     md_bg_color="#262626",
                     buttons=[
-                        MDRectangleFlatButton(
+                        MDRaisedButton(
                             text="Continuer sans connexion",
-                            theme_text_color="Custom",
-                            text_color=self.app.theme_cls.primary_color,
+                            # theme_text_color="Custom",
+                            md_bg_color="#4287f5",
+                            # text_color=self.app.theme_cls.primary_color,
                             on_release=self.continuer
                         ),
-                        MDRectangleFlatButton(
+                        MDRaisedButton(
                             text="Connexion",
-                            theme_text_color="Custom",
-                            text_color=self.app.theme_cls.primary_color,
+                            # theme_text_color="Custom",
+                            md_bg_color="#4287f5",
+                            # text_color=self.app.theme_cls.primary_color,
                             on_release=self.connexion
                         ),
-                        MDRectangleFlatButton(
+                        MDRaisedButton(
                             text="Créer un compte",
-                            theme_text_color="Custom",
-                            text_color=self.app.theme_cls.primary_color,
+                            # theme_text_color="Custom",
+                            md_bg_color="#4287f5",
+                            # text_color=self.app.theme_cls.primary_color,
                             on_release=self.creer_compte
                         ),
                     ],

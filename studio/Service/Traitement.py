@@ -16,9 +16,6 @@ class Traitement:
     def __init__(self):
         self.current_dir = os.getcwd()
         # Joindre un autre chemin
-        self.net = cv2.dnn.readNet(os.path.join(self.current_dir, "config", "yolov3.weights"), os.path.join(self.current_dir, "config", "yolov3.cfg"))
-        with open(os.path.join(self.current_dir, "config", "coco.names"), "r") as f:
-            self.classes = [line.strip() for line in f.readlines()]
         self.traints = []
         self.gray_target = None
         self.encours = False

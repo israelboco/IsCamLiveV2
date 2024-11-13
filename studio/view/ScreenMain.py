@@ -25,6 +25,13 @@ class ScreenMain(MDScreen):
     
     def dialog_box_cam(self):
         self.notificationService.add_cam_box()
+    
+    def file_manager_open(self):
+        self.ids.lien.ids.text_field.text = filedialog.askopenfilename( 
+            title="Ouvrir",
+            defaultextension=".mp4",
+            filetypes=(("Media files", "*.mp4"), ("All files", "*.*"))
+        )
 
 class ScreenWelcome(MDScreen):
     dialog = None
@@ -54,7 +61,7 @@ class CardReducteImage(MDCard, FocusBehavior):
         super().__init__(*args, **kwargs)
         self.controle = None
         self.dialogTraiteBox = None
-        self.ids.check_person.active = True
+        # self.ids.check_person.active = True
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
@@ -70,8 +77,10 @@ class CardReducteImage(MDCard, FocusBehavior):
             } for index in self.getnetworks.get_networks()
         ]
 
-        self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.ids.list_camera)
+        # self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.ids.list_camera)
 
+    def setControle(self, controle):
+        self.controle = controle
 
     def start(self):
         self.ids.lien.text = self.controle.text

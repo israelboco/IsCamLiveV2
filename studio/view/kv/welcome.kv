@@ -1,28 +1,38 @@
 <ScreenWelcome>:
+    canvas.before:
+        Color:
+            rgba: (0.1, 0.1, 0.1, 1)  # Change la couleur de fond pour une teinte plus sombre
+        Rectangle:
+            size: self.size
+            pos: self.pos
     md_bg_color: "#262626"
 
     Image:
         source: "studio/asset/holo.png"
         pos_hint: {"center_x": 0.05, "center_y": 0.94}
-        size_hint: 0.2, 0.2
-    
-    MDTextButton:
-        text: "A propos"
-        font_size: 15
-        color: "#4287f5"
-        pos_hint: {"center_x": 0.9, "center_y": 0.94}
-        # pos_hint: {"center_x": 0.85, "center_y": 0.94}
-        on_release:
-            root.apropos()
+        size_hint: 0.15, 0.15  # Taille réduite pour un meilleur ajustement
 
     Image:
         source: "studio/asset/holo.png"
         pos_hint: {"center_x": 0.5, "center_y": 0.65}
-        size_hint: .7, .8
+        size_hint: .65, .75
+    
+    MDIconButton:
+        icon: "information-outline"
+        theme_text_color: "Custom"
+        text_color: "#4287f5"
+        pos_hint: {"center_x": 0.9, "center_y": 0.94}
+        on_release:
+            root.apropos()
+
+    # Image:
+    #     source: "studio/asset/holo.png"
+    #     pos_hint: {"center_x": 0.5, "center_y": 0.65}
+    #     size_hint: .7, .8
 
     MDLabel:
-        text: "[b][i] B i e n v e n u e  s u r   C a m L i v e  ! [/i][/b]"
-        font_size: "26sp"
+        text: "[b][i]Bienvenue sur CamLive ![/i][/b]"
+        font_size: "28sp"  # Augmentation de la taille du texte pour plus de visibilité
         pos_hint: {"center_y": .42}
         halign: "center"
         color: "#5AA6FF"
@@ -30,7 +40,7 @@
 
     MDLabel:
         text: "[b][i]Meilleure application pour optimiser la capture et la diffusion multi-sources en temps réel lors d'événements : une solution rentable avec Cam Live.[/b][/i]"
-        font_size: "13sp"
+        font_size: "14sp"
         size_hint_x: .85
         pos_hint: {"center_x": .5, "center_y": .3}
         halign: "center"
@@ -39,18 +49,20 @@
 
     MDRectangleFlatButton:
         text: "Démarrer"
-        size_hint: .66, .065
+        size_hint: .7, .07
         pos_hint: {"center_x": .5, "center_y": .18}
-        background_color: 0, 0, 0, 0
+        theme_text_color: "Custom"
+        text_color: "#FFFFFF"  # Couleur du texte blanche
+        line_color: "#5AA6FF"  # Couleur de la bordure
         on_release:
             app.data.sessions()
         canvas.before:
             Color:
-                rgb: rgba(52, 0, 231, 255)
+                rgba: (0.35, 0.67, 0.97, 1)  # Couleur d'arrière-plan du bouton
             RoundedRectangle:
                 size: self.size
                 pos: self.pos
-                radius: [5]
+                radius: [10]  # Coins arrondis
 
 
 <MainScreenView>
@@ -69,26 +81,37 @@
         main_view: main_view
 
 
-<AProposBox>
+<AProposBox>:
     label_propos: label_propos
     size_hint_y: None
-    height: dp(150)
-    MDScrollView:
+    height: dp(300)  
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: 2
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_height: True
 
-            FitImage:
-                source: "studio/asset/holo.png"
-                pos_hint: {"center_x": 0.5, "center_y": 0.85}
-                size_hint: .5, .7            
+        MDScrollView:
+        
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(10)
+                spacing: dp(10)
 
-            MDLabel:
-                id: label_propos
-                text: ''
-                markup: True
-                halign: 'center'
+                FitImage:
+                    source: "studio/asset/holo.png"
+                    # pos_hint: {"center_x": 0.5, "center_y": 0.85}
+                    size_hint: .65, .75
+
+                MDLabel:
+                    id: label_propos
+                    text: "CamLive version 1.0\nOptimisation des captures multi-sources."
+                    markup: True
+                    halign: 'center'
+                    size_hint_y: None
+                    font_size: '16sp'  # Taille du texte augmentée pour une meilleure lisibilité
+                    text_color: "#5AA6FF"  # Couleur du texte assortie au thème principal
+                    height: self.texture_size[1]
+
 
 
 <Connexion>
@@ -96,12 +119,16 @@
     text_password: text_password
     text_email: text_email
     size_hint_y: None
-    height: dp(150)
+    height: dp(250)
+    padding: dp(10)
+
     MDScrollView:
 
         MDBoxLayout:
             orientation: 'vertical'
             size_hint_y: 1.2
+            spacing: dp(10)
+            padding: dp(10)
 
             MDTextField:
                 id: text_username
@@ -143,15 +170,103 @@
                 line_color_normal: "#4287f5"
                 helper_text_mode: "on_focus"     
 
+# <Connexion>:
+#     text_username: text_username
+#     text_password: text_password
+#     text_email: text_email
+#     size_hint_y: None
+#     height: dp(350)  # Ajuster la hauteur pour que tout s'adapte bien
+#     padding: dp(20)  # Ajout de padding pour espacer les éléments
+#     spacing: dp(15)  # Espacement vertical entre les champs
+#     MDBoxLayout:
+#         orientation: 'vertical'
+#         adaptive_height: True
+
+#         MDTextField:
+#             id: text_username
+#             hint_text: "Nom d'utilisateur"
+#             icon_left: "account"
+#             font_size: dp(16)
+#             icon_left_color_normal: "#4287f5"
+#             icon_left_color_focus: "#4287f5"
+#             hint_text_color_normal: "#5AA6FF"
+#             text_color_normal: "#5AA6FF"
+#             line_color_focus: "#5AA6FF"
+#             line_color_normal: "#5AA6FF"
+#             helper_text: "Veuillez entrer votre nom d'utilisateur"
+#             helper_text_mode: "on_focus"
+#             radius: [25, 25, 25, 25]  # Coins arrondis
+
+#         MDTextField:
+#             id: text_email
+#             hint_text: "Email"
+#             icon_left: "email"
+#             font_size: dp(16)
+#             icon_left_color_normal: "#4287f5"
+#             icon_left_color_focus: "#4287f5"
+#             hint_text_color_normal: "#5AA6FF"
+#             text_color_normal: "#5AA6FF"
+#             line_color_focus: "#5AA6FF"
+#             line_color_normal: "#5AA6FF"
+#             helper_text: "Veuillez entrer votre email"
+#             helper_text_mode: "on_focus"
+#             radius: [25, 25, 25, 25]
+
+#         MDTextField:
+#             id: text_password
+#             hint_text: "Mot de passe"
+#             icon_left: "lock"
+#             font_size: dp(16)
+#             password: True
+#             icon_left_color_normal: "#4287f5"
+#             icon_left_color_focus: "#4287f5"
+#             hint_text_color_normal: "#5AA6FF"
+#             text_color_normal: "#5AA6FF"
+#             line_color_focus: "#5AA6FF"
+#             line_color_normal: "#5AA6FF"
+#             helper_text: "Veuillez entrer votre mot de passe"
+#             helper_text_mode: "on_focus"
+#             radius: [25, 25, 25, 25]
+        
+#         MDBoxLayout:
+
+
+#             MDRaisedButton:
+#                 text: "Se connecter"
+#                 size_hint: 0.8, None
+#                 height: dp(48)
+#                 pos_hint: {"center_x": 0.5}
+#                 md_bg_color: "#4287f5"  # Couleur du bouton de connexion
+#                 on_release:
+#                     root.login()  # Appeler la méthode login() lors du clic
+
+#             MDRaisedButton:
+#                 text: "Se connecter"
+#                 size_hint: 0.8, None
+#                 height: dp(48)
+#                 pos_hint: {"center_x": 0.5}
+#                 md_bg_color: "#4287f5"  # Couleur du bouton de connexion
+#                 on_release:
+#                     root.login()  #
+
+#             MDRaisedButton:
+#                 text: "Se connecter"
+#                 size_hint: 0.8, None
+#                 height: dp(48)
+#                 pos_hint: {"center_x": 0.5}
+#                 md_bg_color: "#4287f5"  # Couleur du bouton de connexion
+#                 on_release:
+#                     root.login()  #
 
 <Compte>
     text_username: text_username
     text_email: text_email
     sessions: sessions
     size_hint_y: None
-    height: dp(150)
+    height: dp(300)
     padding: dp(10)
     spacing: dp(10)
+
     MDScrollView:
 
         MDBoxLayout:
@@ -190,6 +305,68 @@
                 id: sessions
                 app: app    
 
+
+# <Compte>:
+#     text_username: text_username
+#     text_email: text_email
+#     sessions: sessions
+#     size_hint_y: None
+#     height: dp(300)  # Augmenter la hauteur pour plus de confort
+#     padding: dp(20)  # Augmenter le padding pour espacer les éléments
+#     spacing: dp(15)  # Espacement entre les champs
+#     MDBoxLayout:
+#         orientation: 'vertical'
+#         adaptive_height: True  # Adapter la hauteur à son contenu
+
+#         MDTextField:
+#             id: text_username
+#             hint_text: "Nom d'utilisateur"
+#             icon_left: "account"
+#             font_size: dp(16)
+#             mode: "round"
+#             icon_left_color_normal: "#4287f5"
+#             icon_left_color_focus: "#4287f5"
+#             hint_text_color_normal: "#5AA6FF"
+#             text_color_normal: "#5AA6FF"
+#             line_color_focus: "#5AA6FF"
+#             line_color_normal: "#5AA6FF"
+#             helper_text: "Entrez votre nom d'utilisateur"
+#             helper_text_mode: "on_focus"
+#             radius: [25, 25, 25, 25]  # Coins arrondis pour modernité
+
+#         MDTextField:
+#             id: text_email
+#             hint_text: "Email"
+#             icon_left: "email"
+#             mode: "round"
+#             font_size: dp(16)
+#             icon_left_color_normal: "#4287f5"
+#             icon_left_color_focus: "#4287f5"
+#             hint_text_color_normal: "#5AA6FF"
+#             text_color_normal: "#5AA6FF"
+#             line_color_focus: "#5AA6FF"
+#             line_color_normal: "#5AA6FF"
+#             helper_text: "Entrez votre email"
+#             helper_text_mode: "on_focus"
+#             radius: [25, 25, 25, 25]
+
+#         MDRaisedButton:
+#             text: "Gérer les sessions"
+#             size_hint: .5, None
+#             height: dp(40)
+#             pos_hint: {"center_x": 0.5}
+#             md_bg_color: "#4287f5"
+#             on_release:
+#                 app.gestion_sessions()  # Appeler la méthode pour gérer les sessions
+
+#         MDRaisedButton:
+#             text: "Mettre à jour le compte"
+#             size_hint: .5, None
+#             height: dp(40)
+#             pos_hint: {"center_x": 0.5}
+#             md_bg_color: "#5AA6FF"
+#             on_release:
+#                 app.update_account()  # Méthode pour mettre à jour le compte
 
 
 <TextFieldRound>:

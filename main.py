@@ -1,12 +1,16 @@
 import kivymd  
 from kivy.lang import Builder
 from kivymd.app import MDApp 
+import os
+from scapy.all import ARP, Ether, srp
+import ipaddress
 from kivymd.font_definitions import fonts
 from kivymd.uix.screen import MDScreen
 from kivy.uix.button import Button
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.utils import asynckivy 
 from kivymd.toast import toast
+from kivy.animation import Animation, AnimationTransition
 from kivy.core.window import Window
 from studio.Service.NotificationService import NotificationService
 from studio.constants.GetNetworks import GetNetworks
@@ -49,15 +53,15 @@ class AppCameraLive(MDApp):
         self.data.db_manager.create_table()
     
     def start_card_view(self, controle=None):
-        if self.data.expand_two:
-            self.screenMain.ids.two_widget.add_widget(self.data.expansion.expand_two)
-            self.data.expand_two = False
-            self.data.expansion.expand_two.content.controle = controle
-            self.data.expansion.expand_two.content.start()
+        content_controle = self.screenMain.ids.content_controle
+        if content_controle.height == 0:
+            animation = Animation(height=240, opacity=1, duration=0.5)
+            self.screenMain.ids.camView.setControle(controle)
+            self.screenMain.ids.camView.start()
         else:
-            self.screenMain.ids.two_widget.remove_widget(self.data.expansion.expand_two)
-            self.data.expand_two = True
-            self.data.expansion.expand_two.content.controle = None
+            animation = Animation(height=0, opacity=0, duration=0.5)
+            self.screenMain.ids.camView.setControle(None)
+        animation.start(content_controle)
 
 
     def start_connexion(self):
@@ -68,6 +72,15 @@ class AppCameraLive(MDApp):
             self.screenMain.ids.one_widget.remove_widget(self.data.expansion.expand_one)
             self.data.expand_one = True
     
+    def open_cam(self):
+        content_add_cam = self.screenMain.ids.content_add_cam
+        if content_add_cam.size_hint_y == 0:
+            animation = Animation(size_hint_y=0.1, opacity=1, duration=0.5)
+        else:
+            animation = Animation(size_hint_y=0, opacity=0, duration=0.5)
+        animation.start(content_add_cam)
+
+
     def open_param(self):
         self.notificationService.open_param()
 
@@ -118,11 +131,14 @@ class AppCameraLive(MDApp):
     async def on_start_video(self):
         self.screenMain.ids.spinner.active = True
         await asynckivy.sleep(2)
-        if self.data.camController.videoCamera:
-            self.screenMain.ids.spinner.active = False
-            return toast("stopper d'abord la camera en cours.")
-        self.resource_cam_thread = None
-        await self.async_cam_thread()
+        # if self.data.camController.videoCamera:
+        #     self.screenMain.ids.spinner.active = False
+        #     return toast("stopper d'abord la camera en cours.")
+        # self.resource_cam_thread = None
+        # await self.async_cam_thread()
+        text = self.screenMain.ids.lien.text
+        print(text)
+        self.add_tab(text)
         self.screenMain.ids.spinner.active = False
     
     async def async_cam_thread(self):
@@ -174,6 +190,30 @@ class AppCameraLive(MDApp):
                 "on_release": lambda x=index: self.selectDropdownNetwork(x),
             } for index in self.getnetworks.get_networks()
         ]
+        # Remplacez par votre réseau local
+        # network = ipaddress.ip_network('192.168.43.0/24', strict=False)
+
+        # for ip in network.hosts():
+        #     response = os.system(f"ping -c 1 {ip} > /dev/null 2>&1")
+        #     if response == 0:
+        #         print(f"IP active: {ip}")
+        #         self.menu_items_camera.append(
+        #             {
+        #                 "viewclass": "OneLineListItem",
+        #                 "text": str(f"App: {ip}"),
+        #                 "on_release": lambda x=ip: self.selectDropdownNetwork(x),
+        #             }
+        #         )
+
+        # target_ip = "192.168.1.1/24"
+        # arp = ARP(pdst=target_ip)
+        # ether = Ether(dst="ff:ff:ff:ff:ff:ff")
+        # packet = ether/arp
+
+        # result = srp(packet, timeout=3, verbose=0)[0]
+
+        # for sent, received in result:
+        #     print(f"IP: {received.psrc}")
 
         self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.screenMain.ids.list_camera)
 
