@@ -16,7 +16,7 @@ from studio.view.ScreenMain import CardReducteImage
 
 
 class IconButtonAction(FocusBehavior, MagicBehavior, RotateBehavior, MDIconButton):
-    
+     
     def __init__(self, unfocus_color=None, **kwargs):
         super().__init__(**kwargs)
         self.focus_color = "#DCE8F8"

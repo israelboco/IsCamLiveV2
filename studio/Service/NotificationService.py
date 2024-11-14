@@ -4,6 +4,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.button import MDRectangleFlatButton
 from studio.constants.GetNetworks import GetNetworks
 from kivymd.toast import toast
+from kivy.uix.modalview import ModalView
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivy.properties import StringProperty
 from tkinter import filedialog
@@ -11,7 +12,6 @@ from tkinter import filedialog
 
 class NotificationService:
     dialogConnectLiveBox = None
-    dialogAddCamBox = None
     dialogOpenPramBox = None
 
     def start_connect_live(self):
@@ -36,39 +36,39 @@ class NotificationService:
             )
         self.dialogConnectLiveBox.open()    
 
-    def add_cam_box(self):
-        if not self.dialogAddCamBox:
-            self.dialogAddCamBox = MDDialog(
-                    title="[b][color=#5AA6FF]Ajouter un nouveau cam vidéo[/color][/b]",
-                    type="custom",
-                    content_cls=AddCamBox(),
-                    md_bg_color="#262626",
-                    buttons=[
-                        MDRectangleFlatButton(
-                            text="Annuler",
-                            theme_text_color="Custom",
-                            text_color="#4287f5",
-                            on_release= self.cencel_cam
-                        ),
-                        MDRectangleFlatButton(
-                            text="Ouvrir",
-                            theme_text_color="Custom",
-                            text_color="#4287f5",
-                            on_release= self.ouvrir_cam
-                        ),
-                    ],
-            )
-        self.dialogAddCamBox.open()
+    # def add_cam_box(self):
+    #     if not self.dialogAddCamBox:
+    #         self.dialogAddCamBox = MDDialog(
+    #                 title="[b][color=#5AA6FF]Ajouter un nouveau cam vidéo[/color][/b]",
+    #                 type="custom",
+    #                 content_cls=AddCamBox(),
+    #                 md_bg_color="#262626",
+    #                 buttons=[
+    #                     MDRectangleFlatButton(
+    #                         text="Annuler",
+    #                         theme_text_color="Custom",
+    #                         text_color="#4287f5",
+    #                         on_release= self.cencel_cam
+    #                     ),
+    #                     MDRectangleFlatButton(
+    #                         text="Ouvrir",
+    #                         theme_text_color="Custom",
+    #                         text_color="#4287f5",
+    #                         on_release= self.ouvrir_cam
+    #                     ),
+    #                 ],
+    #         )
+    #     self.dialogAddCamBox.open()
 
-    def ouvrir_cam(self, dt):
-        text = self.dialogAddCamBox.content_cls.lien.text
-        if text == "":
-            return toast("source vide")
-        self.dialogAddCamBox.content_cls.open_cam()
-        self.dialogAddCamBox.dismiss()
+    # def ouvrir_cam(self, dt):
+    #     text = self.dialogAddCamBox.content_cls.lien.text
+    #     if text == "":
+    #         return toast("source vide")
+    #     self.dialogAddCamBox.content_cls.open_cam()
+    #     self.dialogAddCamBox.dismiss()
     
-    def cencel_cam(self, dt):
-        self.dialogAddCamBox.dismiss()
+    # def cencel_cam(self, dt):
+    #     self.dialogAddCamBox.dismiss()
     
     def open_param(self):
         if not self.dialogOpenPramBox:
@@ -126,7 +126,7 @@ class ParamBox(MDBoxLayout):
         self.ids.text_field.text = path     
 
 
-class AddCamBox(MDBoxLayout):
+class AddCamBox(ModalView):
     menu_items_camera = None
     dropdown2 = None
     getnetworks = GetNetworks()
@@ -172,6 +172,7 @@ class AddCamBox(MDBoxLayout):
             self.ids.lien.text = str(f"https://{ip}")
         if self.dropdown2:
             self.dropdown2.dismiss()
+
 
 
 class Connexion(MDBoxLayout):

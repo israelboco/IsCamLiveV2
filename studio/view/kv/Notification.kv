@@ -65,37 +65,109 @@
     height: dp(100)
 
     MDBoxLayout:
-        orientation: "horizontal"
+        id: content_add_cam
+        orientation: "vertical"
+        md_bg_color: "#676767"
+        padding: "10dp"
+        spacing: "5dp"
+        # size_hint_y: 0
+        # opacity: 0.0
 
-        MDSpinner:  
-            id: spinner
-            size_hint: None, None
-            size: dp(20), dp(20)
-            pos_hint: {'center_y': .5}
-            active: False
-        
-        IconButtonAction:
-            id: list_camera
-            icon: "camera-outline"
-            icon_size: dp(20)
-            style: "tonal"
-            theme_bg_color: "Custom"
-            theme_icon_color: "Custom"
-            unfocus_color: '#262626'
-            icon_color: "#4287f5"
-            pos_hint: {"center_y": .5}
-            on_release: root.listcamera()
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: "5dp"
+            padding: "5dp"
 
-        ClickableTextFieldRoundCam:
-            id: lien
-            hint_text: "source"
-            pos_hint: {"center_y": .5}
+            MDSpinner:
+                id: spinner
+                size_hint: None, None
+                size: dp(20), dp(20)
+                active: False
+                pos_hint: {'center_y': .5}
+            
+            IconButtonAction:
+                icon: "file-upload-outline"
+                icon_size: dp(20)
+                icon_color: "#4287f5"
+                theme_icon_color: "Custom"
+                on_release:
+                    root.file_manager_open()
 
-        # MDRectangleFlatButton:
-        #     text: 'Ouvrir'
-        #     pos_hint: {'center_x': .4, 'center_y': .5}
-        #     on_release: 
-        #         root.open_cam(self.lien.text)
+            IconButtonAction:
+                id: list_camera
+                icon: "camera-outline"
+                icon_size: dp(20)
+                icon_color: "#4287f5"
+                theme_icon_color: "Custom"
+                on_release: app.listcamera()
+
+            ClickableTextFieldRound:
+                id: lien
+                size_hint_x: None
+                width: content_add_cam.width / 2
+                hint_text: "Video source"
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            padding: dp(5)
+
+            MDTextField:
+                id: source_audio
+                hint_text: 'Audio source'
+                size_hint_x: .5
+            
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(2)
+            
+                MDCheckbox:
+                    group: "lien"
+                    id: check_ipwebcam
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    # on_active: root.on_checkbox_active("Objet", self.active)
+
+                MDLabel:
+                    text: "[color=#4287f5]IPWebCam[/color]"
+                    font_size: dp(10)
+                    adaptive_width: True
+                    markup: True
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(2)
+
+                MDCheckbox:
+                    id: check_ip
+                    group: "lien"
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    # on_active: root.on_checkbox_active("Objet", self.active)
+
+                MDLabel:
+                    text: "[color=#4287f5]IP[/color]"
+                    font_size: dp(10)
+                    adaptive_width: True
+                    markup: True
+                
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(2)
+                
+                MDCheckbox:
+                    id: check_video
+                    group: "lien"
+                    size_hint: None, None
+                    size: dp(20), dp(20)
+                    # on_active: root.on_checkbox_active("Objet", self.active)
+
+                MDLabel:
+                    text: "[color=#4287f5]Video[/color]"
+                    font_size: dp(10)
+                    adaptive_width: True
+                    markup: True
+                
+
 
 
 <ClickableTextFieldRoundCam>:

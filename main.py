@@ -12,7 +12,7 @@ from kivymd.utils import asynckivy
 from kivymd.toast import toast
 from kivy.animation import Animation, AnimationTransition
 from kivy.core.window import Window
-from studio.Service.NotificationService import NotificationService
+from studio.Service.NotificationService import AddCamBox, NotificationService
 from studio.constants.GetNetworks import GetNetworks
 from studio.controller.ConnectLiveController import ConnectLiveController
 from studio.controller.CamController import  CamController
@@ -35,13 +35,15 @@ class AppCameraLive(MDApp):
         self.dropdown = MDDropdownMenu()
         self.main_view = MainScreenView()
         self.getnetworks = GetNetworks()
+        self.add_cam = AddCamBox()
         self.notificationService = NotificationService()
         self.screenMain = self.main_view.screen_main
         self.data = Data(self)
+        self.icon = "studio/asset/Logo.ico"
+    
 
     def build(self) -> MDScreen:
         self.title = "Cam Live"
-        Window.icon = "studio/asset/Logo.ico"
         return self.main_view
 
     def on_start(self):
@@ -52,16 +54,16 @@ class AppCameraLive(MDApp):
         self.data.expansion.start_expand_two()
         self.data.db_manager.create_table()
     
-    def start_card_view(self, controle=None):
-        content_controle = self.screenMain.ids.content_controle
-        if content_controle.height == 0:
-            animation = Animation(height=240, opacity=1, duration=0.5)
-            self.screenMain.ids.camView.setControle(controle)
-            self.screenMain.ids.camView.start()
-        else:
-            animation = Animation(height=0, opacity=0, duration=0.5)
-            self.screenMain.ids.camView.setControle(None)
-        animation.start(content_controle)
+    # def start_card_view(self, controle=None):
+    #     content_controle = self.screenMain.ids.content_controle
+    #     if content_controle.height == 0:
+    #         animation = Animation(height=240, opacity=1, duration=0.5)
+    #         self.screenMain.ids.camView.setControle(controle)
+    #         self.screenMain.ids.camView.start()
+    #     else:
+    #         animation = Animation(height=0, opacity=0, duration=0.5)
+    #         self.screenMain.ids.camView.setControle(None)
+    #     animation.start(content_controle)
 
 
     def start_connexion(self):
@@ -73,12 +75,13 @@ class AppCameraLive(MDApp):
             self.data.expand_one = True
     
     def open_cam(self):
-        content_add_cam = self.screenMain.ids.content_add_cam
-        if content_add_cam.size_hint_y == 0:
-            animation = Animation(size_hint_y=0.1, opacity=1, duration=0.5)
-        else:
-            animation = Animation(size_hint_y=0, opacity=0, duration=0.5)
-        animation.start(content_add_cam)
+        self.add_cam.open()
+        # content_add_cam = self.screenMain.ids.content_add_cam
+        # if content_add_cam.size_hint_y == 0:
+        #     animation = Animation(size_hint_y=0.1, opacity=1, duration=0.5)
+        # else:
+        #     animation = Animation(size_hint_y=0, opacity=0, duration=0.5)
+        # animation.start(content_add_cam)
 
 
     def open_param(self):
@@ -175,7 +178,7 @@ class AppCameraLive(MDApp):
             } for index in list(FormatEnum)
         ]
 
-        self.dropdown1 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_format, width_mult=3, caller=self.screenMain.ids.shape)
+        self.dropdown1 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_format, width_mult=3, caller=self.screenMain.ids.cardImage.ids.shape)
 
     def listDropdown(self):
         self.dropdown1.open()
@@ -190,32 +193,8 @@ class AppCameraLive(MDApp):
                 "on_release": lambda x=index: self.selectDropdownNetwork(x),
             } for index in self.getnetworks.get_networks()
         ]
-        # Remplacez par votre réseau local
-        # network = ipaddress.ip_network('192.168.43.0/24', strict=False)
 
-        # for ip in network.hosts():
-        #     response = os.system(f"ping -c 1 {ip} > /dev/null 2>&1")
-        #     if response == 0:
-        #         print(f"IP active: {ip}")
-        #         self.menu_items_camera.append(
-        #             {
-        #                 "viewclass": "OneLineListItem",
-        #                 "text": str(f"App: {ip}"),
-        #                 "on_release": lambda x=ip: self.selectDropdownNetwork(x),
-        #             }
-        #         )
-
-        # target_ip = "192.168.1.1/24"
-        # arp = ARP(pdst=target_ip)
-        # ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-        # packet = ether/arp
-
-        # result = srp(packet, timeout=3, verbose=0)[0]
-
-        # for sent, received in result:
-        #     print(f"IP: {received.psrc}")
-
-        self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.screenMain.ids.list_camera)
+        self.dropdown2 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_camera, width_mult=3, caller=self.add_cam.ids.list_camera)
 
 
     def affiche_audio(self):
@@ -228,7 +207,7 @@ class AppCameraLive(MDApp):
             } for index in range(0, self.data.index)
         ]
 
-        self.dropdown3 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_audio, width_mult=3, caller=self.screenMain.ids.microphone)
+        self.dropdown3 = MDDropdownMenu(md_bg_color="#bdc6b0",items=self.menu_items_audio, width_mult=3, caller=self.screenMain.ids.cardImage.ids.microphone)
 
     def listaudio(self):
         self.dropdown3.open()
