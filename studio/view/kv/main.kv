@@ -85,7 +85,7 @@
 
                 CardViewImage:
                     id: cardImage
-                    size_hint: .9, .5
+                    size_hint: .95, .5
                     pos_hint: {"center_x": .5, "center_y": .5}
 
             MDBoxLayout:
@@ -120,35 +120,38 @@
 <CardViewImage>:
     md_bg_color: "#676767"
     padding: "10dp"
-    spacing: "5dp"
-    radius: [24]  # Coins arrondis pour un aspect moderne
+    radius: [24]  
     image: image
     lecture: lecture
+    size_hint_y: None
+    height: dp(600)
 
     MDBoxLayout:
         orientation: "vertical"
         md_bg_color: "#676767"
 
         MDBoxLayout:
-            orientation: "vertical"
+            orientation: "horizontal"
             md_bg_color: "#676767"
-            size_hint_x: .5
-            pos_hint: {'center_x': .5, 'center_y': .7}
+            
 
             MDBoxLayout:
                 orientation: "horizontal"
                 md_bg_color: "#676767"
                 padding: "10dp"
                 spacing: "5dp"
-                size_hint_x: .5
+                size_hint: .6, .2
+                pos_hint: {'center_x': .25, 'center_y': .8}
+
 
                 IconButtonAction:
                     id: microphone
                     icon: "microphone-outline"
-                    icon_size: dp(20)
+                    icon_size: dp(15)
                     icon_color: "#4287f5"
                     theme_icon_color: "Custom"
                     on_release: app.listaudio()
+                    pos_hint: {'center_y': .5}
 
                 MDLabel:
                     id: audio
@@ -163,10 +166,11 @@
                 IconButtonAction:
                     id: shape
                     icon: "shape-outline"
-                    icon_size: dp(20)
+                    icon_size: dp(15)
                     icon_color: "#4287f5"
                     theme_icon_color: "Custom"
                     on_release: app.listDropdown()
+                    pos_hint: {'center_y': .5}
 
                 MDLabel:
                     id: label_format
@@ -181,28 +185,27 @@
                 IconButtonAction:
                     id: save
                     icon: "content-save-outline"
-                    icon_size: dp(20)
+                    icon_size: dp(15)
                     icon_color: "#4287f5"
                     theme_icon_color: "Custom"
                     on_release: app.data.camController.on_record()
+                    pos_hint: {'center_y': .5}
 
             MDCard:
                 id: bage_image
                 md_bg_color: "#fff000"
                 size_hint: None, None
-                width: dp(15)
-                height: dp(15)
+                width: dp(10)
+                height: dp(10)
                 radius: [24]
-                pos_hint: {"center_x": .94, "center_y": .5}
+                pos_hint: {"center_x": .75, "center_y": .98}
         
-        MDSeparator:
+        # MDSeparator:
 
         Image:
             id: image
             source: "studio/asset/texture_image.jpg"
-            size_hint: None, None
-            width: root.width - dp(50)
-            height: root.height - dp(75)
+            # size_hint_y: .5
             pos_hint: {"center_x": .5, "center_y": .5}
 
         MDBoxLayout:
@@ -210,6 +213,7 @@
             md_bg_color: "#676767"
             spacing: "10dp"
             padding: "10dp"
+            size_hint_y: .2
 
             IconButtonAction:
                 id: microphone
@@ -242,7 +246,7 @@
                 text: "[color=#ffffff]00:00:00[/color]"
                 font_size: dp(12)
                 size_hint_x: .3
-                pos_hint: {"center_y": .8}
+                pos_hint: {"center_y": .5}
                 markup: True
                 adaptive_height: True
                 halign: 'right'
